@@ -24,7 +24,7 @@ const HeroSection = () => {
             </h1>
             
             <p className="text-xl text-zinc-300 mb-8 max-w-2xl">
-            Earn While You Train the Future of AI — on your own schedule
+            Earn While You Train the Future of AI on your own schedule
             </p>
 
             <motion.a
@@ -47,7 +47,7 @@ const HeroSection = () => {
           >
             {[
               { value: '100+', label: 'Experts' },
-              { value: '1.2M', label: 'Assignments' },
+              { value: '300K', label: 'Assignments' },
               { value: '$1M+', label: 'Earned' },
             ].map((stat, index) => (
               <div key={index} className="bg-gray-800/50 p-6 rounded-xl">

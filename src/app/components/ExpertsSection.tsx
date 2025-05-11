@@ -106,7 +106,7 @@ const ExpertsSection = () => {
               <div className="text-zinc-300">Active Experts</div>
             </div>
             <div className="p-4">
-              <div className="text-4xl font-bold text-cyan-400">1.2M</div>
+              <div className="text-4xl font-bold text-cyan-400">300K</div>
               <div className="text-zinc-300">Completed Tasks</div>
             </div>
             <div className="p-4">
