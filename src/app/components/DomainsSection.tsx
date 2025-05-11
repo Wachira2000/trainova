@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { 
-  FaSeedling, 
+import {
+  FaSeedling,
   FaPenFancy,
-  FaCalculator, 
-  FaFlask, 
+  FaCalculator,
+  FaFlask,
   FaBalanceScale,
   FaHistory,
   FaCode,
@@ -36,7 +36,7 @@ const DomainsSection = () => {
     <section className="relative py-20 bg-gray-900 border-t border-gray-800 overflow-hidden">
       {/* Conditional particle rendering */}
       <div className="absolute inset-0 opacity-10">
-        {isMounted && 
+        {isMounted &&
           [...Array(20)].map((_, i) => (
             <motion.div
               key={i}
@@ -61,7 +61,8 @@ const DomainsSection = () => {
         }
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Added relative and z-index to ensure content is above particles */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -79,56 +80,72 @@ const DomainsSection = () => {
 
         {/* Category Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-  {categories.map((category, index) => (
-    <motion.div
-      key={category.title}
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.1 }}
-      className="group relative cursor-pointer"
-    >
-      <Link href="/opportunities" passHref className="absolute inset-0 z-10">
-        <span className="sr-only">View {category.title} opportunities</span>
-      </Link>
-      <div className={`bg-gradient-to-br ${category.color} p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
-        <div className="bg-gray-900 rounded-xl p-6 h-full">
-          <category.icon className="h-12 w-12 text-white mb-4" />
-          <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
-          <div className="inline-flex items-center text-cyan-400 transition-colors">
-            Learn more
-            <span className="ml-2">→</span>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  ))}
-</div>
-
-        {/* Additional Domains Card */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 p-1 rounded-2xl max-w-md mx-auto"
-        >
-          <div className="bg-gray-900 rounded-xl p-8 text-center">
-            <FaPlusCircle className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-4">
-              And 20+ Other Expert Domains
-            </h3>
-            <Link href="/opportunities" passHref>
+          {categories.map((category, index) => (
+            // Each category card is a link
+            <Link key={category.title} href="/opportunities" passHref>
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: index * 0.1 }}
+                className="group relative cursor-pointer" // cursor-pointer for the whole card
+                role="group" // Added for semantics with group-hover
+              >
+                {/* This invisible span was for an older pattern, Link now wraps the motion.div directly */}
+                {/* <span className="sr-only">View {category.title} opportunities</span> */}
+                <div className={`bg-gradient-to-br ${category.color} p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
+                  <div className="bg-gray-900 rounded-xl p-6 h-full">
+                    <category.icon className="h-12 w-12 text-white mb-4" />
+                    <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
+                    <div className="inline-flex items-center text-cyan-400 transition-colors">
+                      Learn more
+                      <span className="ml-2">→</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Additional Domains Card - Wrapped with Link */}
+        <Link href="/opportunities" passHref legacyBehavior>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            // Add a subtle hover effect for the entire card if desired
+            whileHover={{ scale: 1.01 }}
+            className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 p-1 rounded-2xl max-w-md mx-auto cursor-pointer group" // Added cursor-pointer and group
+            role="link" // Accessibility: Indicate this div acts as a link
+            tabIndex={0} // Accessibility: Make it focusable
+            // Optional: Add keyboard event for Enter/Space to trigger navigation if Link doesn't handle it automatically with motion.div
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                // useRouter().push('/opportunities') could be used if Link had issues, but passHref should work
+              }
+            }}
+          >
+            <div className="bg-gray-900 rounded-xl p-8 text-center">
+              <FaPlusCircle className="h-12 w-12 text-purple-400 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-4">
+                And 20+ Other Expert Domains
+              </h3>
+              {/* Button - No longer needs its own Link, as the parent card is the link */}
+              <motion.div
+                whileHover={{ scale: 1.05 }} // Keep individual hover for the button itself
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-3 rounded-lg transition-transform cursor-pointer"
+                className="inline-flex items-center bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-3 rounded-lg transition-transform"
+                // No cursor-pointer needed here as the parent card has it.
+                // Role button is fine for semantics if it visually looks like one.
                 role="button"
+                aria-label="Discover All Opportunities" // Good for accessibility
               >
                 Discover All Opportunities
                 <span className="ml-2">→</span>
               </motion.div>
-            </Link>
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
+        </Link>
       </div>
     </section>
   );
