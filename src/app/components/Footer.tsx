@@ -21,17 +21,17 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-gray-900 border-t border-gray-800 mt-20">
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent" />
+      {/* Gradient Overlay - Moved behind content */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent z-0" />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Company Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-             <Link href="/" className="flex items-center w-full max-w-[200px] mb-6">
+            <Link href="/" className="flex items-center w-full max-w-[200px] mb-6">
               <div className="relative w-full h-[150px]"> 
                 <Image
                   src="/logo.png"
@@ -62,7 +62,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-purple-400 transition-colors"
+                    className="text-zinc-400 hover:text-purple-400 transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -83,7 +83,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-purple-400 transition-colors"
+                    className="text-zinc-400 hover:text-purple-400 transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -101,7 +101,7 @@ const Footer = () => {
           
           <motion.button
             onClick={scrollToTop}
-            className="flex items-center text-zinc-400 hover:text-purple-400 transition-colors"
+            className="flex items-center text-zinc-400 hover:text-purple-400 transition-colors cursor-pointer"
             whileHover={{ y: -2 }}
           >
             Back to Top

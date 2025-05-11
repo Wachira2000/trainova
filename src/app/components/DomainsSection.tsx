@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { 
   FaSeedling, 
+  FaPenFancy,
   FaCalculator, 
   FaFlask, 
   FaBalanceScale,
@@ -17,6 +18,7 @@ import {
 const DomainsSection = () => {
   const [isMounted, setIsMounted] = useState(false);
   const categories = [
+    {icon: FaPenFancy, title: 'Creative Writing', color: 'from-pink-500 to-purple-500' },
     { icon: FaSeedling, title: 'Generalist', color: 'from-green-500 to-teal-500' },
     { icon: FaCalculator, title: 'Math', color: 'from-purple-500 to-indigo-500' },
     { icon: FaFlask, title: 'Chemistry', color: 'from-cyan-500 to-blue-500' },
@@ -71,37 +73,37 @@ const DomainsSection = () => {
             Join a Community of Innovators
           </h2>
           <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
-            Our AI trainers come from all backgrounds and have expertise in everything from organic chemistry to creative writing.
+            Our AI trainers come from all backgrounds and have expertise in everything from coding to creative writing.
           </p>
         </motion.div>
 
         {/* Category Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.1 }}
-              className="group relative"
-            >
-              <div className={`bg-gradient-to-br ${category.color} p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
-                <div className="bg-gray-900 rounded-xl p-6 h-full">
-                  <category.icon className="h-12 w-12 text-white mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
-                  <Link
-                    href="/opportunities"
-                    className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
-                  >
-                    Learn more
-                    <span className="ml-2">→</span>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+  {categories.map((category, index) => (
+    <motion.div
+      key={category.title}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.1 }}
+      className="group relative cursor-pointer"
+    >
+      <Link href="/opportunities" passHref className="absolute inset-0 z-10">
+        <span className="sr-only">View {category.title} opportunities</span>
+      </Link>
+      <div className={`bg-gradient-to-br ${category.color} p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
+        <div className="bg-gray-900 rounded-xl p-6 h-full">
+          <category.icon className="h-12 w-12 text-white mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
+          <div className="inline-flex items-center text-cyan-400 transition-colors">
+            Learn more
+            <span className="ml-2">→</span>
+          </div>
         </div>
+      </div>
+    </motion.div>
+  ))}
+</div>
 
         {/* Additional Domains Card */}
         <motion.div
@@ -112,7 +114,7 @@ const DomainsSection = () => {
           <div className="bg-gray-900 rounded-xl p-8 text-center">
             <FaPlusCircle className="h-12 w-12 text-purple-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-4">
-              And 10+ Other Expert Domains
+              And 20+ Other Expert Domains
             </h3>
             <Link href="/opportunities" passHref>
               <motion.div

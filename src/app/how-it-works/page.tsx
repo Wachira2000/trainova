@@ -14,9 +14,9 @@ const HowItWorksPage = () => {
         "Submit domain-specific credentials",
         "Complete initial competency assessment",
         "Sign digital contractor agreement",
-        "1-3 business day approval process"
+        "5 business day approval process"
       ],
-      duration: "5-15 mins"
+      duration: "30 mins"
     },
     {
       icon: FaTasks,
@@ -59,12 +59,12 @@ const HowItWorksPage = () => {
       title: "5. Compensation",
       content: "Get rewarded for your valuable contributions",
       details: [
-        "Weekly PayPal/AirTM payments",
+        "Weekly Wise/PayPal/AirTM payments",
         "Transparent rate calculator",
         "Performance bonuses",
         "Milestone rewards"
       ],
-      duration: "Every Friday payout"
+      duration: "Every Tuesday payout"
     },
     {
       icon: FaUsers,

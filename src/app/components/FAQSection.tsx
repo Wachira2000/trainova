@@ -11,11 +11,20 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      category: 'Getting Started',
+      category: 'About Cognito AI',
       items: [
         {
-          question: 'What does the onboarding process look like?',
-          answer: `During onboarding, you'll join a Squad of contributors led by an experienced lead. Most domains require a resume submission and screening exam, with some requiring interviews.`
+          question: 'What is Cognito AI?',
+          answer: `Cognito AI is where your specialized knowledge meets the frontier of AI. We connect experts like you to architect the next generation of Generative AI through diverse projects, whether it's generating vital training data from your field or scrutinizing the sophisticated performance of these advanced models.`
+        }
+      ]
+    },
+    {
+      category: 'Ready to Start?',
+      items: [
+        {
+          question: 'What should I expect during the onboarding period?',
+          answer: `Please note: All domains require resume submission, a screening exam, and passing interviews. During onboarding, successful candidates will join a contributor Squad led by an experienced lead.`
         },
         {
           question: 'Will I get paid for onboarding?',
@@ -23,23 +32,32 @@ const FAQSection = () => {
         },
         {
           question: 'How long does onboarding take?',
-          answer: 'Typically 1-5 hours for modules and assessment, with <48 hour feedback turnaround.'
+          answer: 'Approximately 2+ hours for modules and assessment, with <72 hour feedback turnaround.'
         }
       ]
     },
+  {
+  category: 'Qualifications',
+  items: [
     {
-      category: 'Qualifications',
-      items: [
-        {
-          question: 'What qualifications are needed?',
-          answer: 'Junior/Senior undergraduates (minimum), Graduate students preferred. Requires strong English and communication skills.'
-        },
-        {
-          question: 'What is the selection process?',
-          answer: 'Resume evaluation against domain-specific requirements in job descriptions.'
-        }
-      ]
-    },
+      question: 'What qualifications are needed?',
+      answer: (
+        <>
+          Applicants are required to hold a{' '}
+          <a 
+            href="https://www.udemy.com/certificate-link"  // Replace with actual URL
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-purple-400 hover:text-purple-300 underline"
+          >
+            Certificate in AI Data Trainer from Udemy
+          </a>{' '}
+          and possess a minimum academic standing of junior or senior undergraduate. 
+          Strong proficiency in English and effective communication skills are mandatory. 
+          Preference will be given to appplicants who meet these requirements.
+        </>
+      )
+    }]},
     {
       category: 'Pay',
       items: [
@@ -49,7 +67,7 @@ const FAQSection = () => {
         },
         {
           question: 'Payment methods?',
-          answer: 'Weekly payments via PayPal or AirTM.'
+          answer: 'Weekly payments via Wise, PayPal or AirTM.'
         }
       ]
     },
@@ -83,7 +101,7 @@ const FAQSection = () => {
             <div key={section.category} className="border-b border-gray-700">
               <button
                 onClick={() => toggleFAQ(section.category, sectionIndex)}
-                className="w-full flex justify-between items-center py-6 text-left"
+                className="w-full flex justify-between items-center py-6 text-left cursor-pointer"
               >
                 <span className="text-xl font-semibold text-purple-400">
                   0{sectionIndex + 1} — {section.category}

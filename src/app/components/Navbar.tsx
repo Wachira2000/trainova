@@ -24,7 +24,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-grow flex items-center">
             <Link href="/" className="flex items-center w-full max-w-[200px]">
-              <div className="relative w-full h-120">
+              <div className="relative w-full h-40">
                 <Image
                   src="/logo.png"
                   alt="Cognito AI"

@@ -17,7 +17,7 @@ const FeaturesSection = () => {
       icon: FaUsers,
       title: "Connect & Collaborate",
       description: "Join our global network of AI trainers and domain experts",
-      stats: "40,000+ active experts",
+      stats: "100+ active experts",
       color: "from-cyan-500 to-teal-500"
     },
     {

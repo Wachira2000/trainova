@@ -1,26 +1,27 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FaHistory, FaBrain, FaLanguage, FaQuoteLeft } from 'react-icons/fa';
+import Image from 'next/image';
+import { FaQuoteLeft } from 'react-icons/fa';
 
 const ExpertsSection = () => {
   const experts = [
     {
-      icon: FaHistory,
+      image: "/expert-tres.png",
       name: "Martin M.",
       field: "History",
       quote: "The flexibility is absolutely amazing. It was a blessing having this kind of freedom for the first time.",
       color: "from-amber-500 to-orange-500"
     },
     {
-      icon: FaBrain,
+      image: "/expert-dos.png",
       name: "Gabriela S.",
       field: "Psychology & Education",
       quote: "Training AI engages my creativity like teaching students. Every interaction is a new challenge.",
       color: "from-purple-500 to-pink-500"
     },
     {
-      icon: FaLanguage,
+      image: "/expert-uno.png",
       name: "Daliah B.",
       field: "German Linguistics",
       quote: "I learn something new daily - from Swiss recipes to cultural nuances. The work itself is endlessly fascinating.",
@@ -59,9 +60,17 @@ const ExpertsSection = () => {
               <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${expert.color} rounded-t-2xl`} />
 
               <div className="space-y-6">
-                {/* Icon */}
+                {/* Expert Image */}
                 <div className="p-3 bg-gray-900 rounded-full w-max">
-                  <expert.icon className="h-8 w-8 text-purple-400" />
+                  <div className="relative h-12 w-12 rounded-full overflow-hidden border-2 border-purple-400">
+                    <Image
+                      src={expert.image}
+                      alt={`${expert.name} - ${expert.field}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
                 </div>
 
                 {/* Quote */}
@@ -93,15 +102,15 @@ const ExpertsSection = () => {
         >
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-4">
-              <div className="text-4xl font-bold text-purple-400">40K+</div>
+              <div className="text-4xl font-bold text-purple-400">100+</div>
               <div className="text-zinc-300">Active Experts</div>
             </div>
             <div className="p-4">
-              <div className="text-4xl font-bold text-cyan-400">3.4M</div>
+              <div className="text-4xl font-bold text-cyan-400">1.2M</div>
               <div className="text-zinc-300">Completed Tasks</div>
             </div>
             <div className="p-4">
-              <div className="text-4xl font-bold text-amber-400">$100M+</div>
+              <div className="text-4xl font-bold text-amber-400">$1M+</div>
               <div className="text-zinc-300">Paid to Experts</div>
             </div>
           </div>

@@ -31,6 +31,36 @@ const FAQPage = () => {
       ]
     },
     {
+      title: 'Qualifications',
+      icon: '🎓',
+      questions: [
+        {
+          question: 'What qualifications do I need to have?',
+          answer: 'Candidates should meet:',
+          list: [
+            <>
+              <span>Applicants are required to hold a- </span>
+              <a 
+                href="https://www.udemy.com/certificate-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:text-purple-300 underline"
+              >
+              certificate in AI Data Trainer from Udemy
+              </a>
+              <span>.</span>
+            </>,
+            'Strong proficiency in English',
+            'Possess a minimum academic standing of junior or senior undergraduate',
+            'Effective communication skills',
+            'Analytical and Critical Thinking',
+            'Adaptability and Continuous Learning',
+            'Attention to Detail'
+          ]
+        }
+      ]
+    },
+    {
       title: 'Technical Requirements',
       icon: '💻',
       questions: [
@@ -135,7 +165,7 @@ const FAQPage = () => {
           </div>
           <input
             type="text"
-            placeholder="Search 300+ FAQs..."
+            placeholder="Search...."
             className="w-full pl-10 pr-4 py-3 bg-gray-800 rounded-lg text-zinc-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -158,7 +188,7 @@ const FAQPage = () => {
               <h3 className="text-lg font-semibold text-white">{q}</h3>
             </div>
             <p className="text-zinc-400 text-sm">
-              {i === 0 ? 'Weekly payments via 10+ methods with real-time tracking' :
+              {i === 0 ? 'Weekly payments via 3 methods with real-time tracking' :
                i === 1 ? 'Work from anywhere - 85% of experts work across timezones' :
                'Specializing in LLMs, diffusion models, and multi-modal architectures'}
             </p>
@@ -178,7 +208,7 @@ const FAQPage = () => {
           >
             <button
               onClick={() => setActiveCategory(activeCategory === category.title ? null : category.title)}
-              className="w-full p-6 flex justify-between items-center text-left"
+              className="w-full p-6 flex justify-between items-center text-left cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 <span className="text-2xl">{category.icon}</span>
@@ -235,12 +265,14 @@ const FAQPage = () => {
               Our expert support team is available 24/7 to assist you
             </p>
             <div className="flex gap-4">
-              <Link
-                href="/contact"
+              <a
+                href="mailto:onboarding@cognitoai.io"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-purple-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-purple-500 transition-colors"
               >
                 <FiMail className="inline-block" /> Email Support
-              </Link>
+              </a>
             </div>
           </div>
         </div>
