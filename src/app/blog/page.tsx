@@ -194,8 +194,7 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
               key={index}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ rootMargin: "-100px 0px", once: true }}
-              className={`bg-gray-800/30 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl border border-gray-700 cursor-pointer ${
+              viewport={{ margin: "-100px 0px", once: true }}              className={`bg-gray-800/30 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl border border-gray-700 cursor-pointer ${
                 expandedPost === index ? '!border-purple-400' : ''
               }`}
             >
