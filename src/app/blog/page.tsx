@@ -171,28 +171,29 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4 sm:py-16 md:py-20 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
+          className="text-center mb-12 md:mb-16 lg:mb-20"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">
             AI Insights & Research
           </h1>
-          <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto px-2 sm:px-0">
             Cutting-edge artificial intelligence research and implementation strategies
           </p>
         </motion.div>
 
-        <div className="grid gap-8">
+        <div className="grid gap-6 md:gap-8">
           {blogPosts.map((post, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              className={`bg-gray-800/30 backdrop-blur-sm rounded-2xl border border-gray-700 cursor-pointer ${
+              viewport={{ margin: "0px 0px -100px 0px" }}
+              className={`bg-gray-800/30 backdrop-blur-sm rounded-xl md:rounded-2xl border border-gray-700 cursor-pointer ${
                 expandedPost === index ? '!border-purple-400' : ''
               }`}
             >
@@ -200,20 +201,23 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
                 onClick={() => setExpandedPost(expandedPost === index ? null : index)}
                 className="w-full text-left cursor-pointer"
               >
-                <div className="p-6">
-                  <div className="flex items-center gap-3 text-zinc-400 mb-4">
-                    <FiClock className="inline-block" />
+                <div className="p-4 sm:p-5 md:p-6">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:text-base text-zinc-400 mb-3 sm:mb-4">
+                    <FiClock className="inline-block flex-shrink-0" />
                     <span>{post.readTime}</span>
-                    <FiTag className="ml-4 inline-block" />
+                    <FiTag className="ml-2 sm:ml-4 inline-block flex-shrink-0" />
                     <span>{post.category}</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-4">{post.title}</h2>
-                  <div className="relative h-64 rounded-xl overflow-hidden">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
+                    {post.title}
+                  </h2>
+                  <div className="relative aspect-video md:h-64 rounded-lg md:rounded-xl overflow-hidden">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 80vw, 1200px"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
                   </div>
@@ -225,11 +229,13 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
                 animate={{ height: expandedPost === index ? 'auto' : 0 }}
                 className="overflow-hidden"
               >
-                <div className="p-6 pt-0">
-                  <div 
-                    className="prose prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                  />
+                <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6">
+                  <div className="prose prose-invert max-w-none 
+                    prose-table:overflow-x-auto prose-code:break-words
+                    prose-td:px-3 prose-td:py-2 prose-th:px-3 prose-th:py-2
+                    prose-code:text-sm sm:prose-code:text-base">
+                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -239,11 +245,11 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
         <motion.div
           initial={{ scale: 0.9 }}
           whileInView={{ scale: 1 }}
-          className="mt-20 text-center"
+          className="mt-12 sm:mt-16 md:mt-20 text-center"
         >
           <a
             href="/opportunities"
-            className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:scale-105 transition-transform"
+            className="inline-block w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg md:rounded-xl hover:scale-105 transition-transform"
           >
             Explore AI Training Opportunities
             <FiArrowUpRight className="ml-2 inline-block" />
