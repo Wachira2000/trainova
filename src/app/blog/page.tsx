@@ -171,69 +171,79 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-12 px-4 sm:py-16 md:py-20 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-8 sm:py-12 md:py-16 px-4 xs:px-6 sm:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 md:mb-16 lg:mb-20"
+          className="text-center mb-10 md:mb-14 lg:mb-20"
         >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6 px-2">
             AI Insights & Research
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto px-2 sm:px-0">
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto">
             Cutting-edge artificial intelligence research and implementation strategies
           </p>
         </motion.div>
 
-        <div className="grid gap-6 md:gap-8">
+        {/* Blog Posts Grid */}
+        <div className="grid grid-cols-1 gap-4 xs:gap-5 sm:gap-6 md:gap-8">
           {blogPosts.map((post, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ margin: "0px 0px -100px 0px" }}
-              className={`bg-gray-800/30 backdrop-blur-sm rounded-xl md:rounded-2xl border border-gray-700 cursor-pointer ${
+              viewport={{ rootMargin: "-100px 0px", once: true }}
+              className={`bg-gray-800/30 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl border border-gray-700 cursor-pointer ${
                 expandedPost === index ? '!border-purple-400' : ''
               }`}
             >
               <button
                 onClick={() => setExpandedPost(expandedPost === index ? null : index)}
-                className="w-full text-left cursor-pointer"
+                className="w-full text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <div className="p-4 sm:p-5 md:p-6">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:text-base text-zinc-400 mb-3 sm:mb-4">
+                <div className="p-3 xs:p-4 sm:p-5 md:p-6">
+                  {/* Metadata Row */}
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 xs:gap-x-3 xs:gap-y-2 text-xs xs:text-sm sm:text-base text-zinc-400 mb-2 xs:mb-3 sm:mb-4">
                     <FiClock className="inline-block flex-shrink-0" />
                     <span>{post.readTime}</span>
-                    <FiTag className="ml-2 sm:ml-4 inline-block flex-shrink-0" />
+                    <FiTag className="ml-1 xs:ml-2 sm:ml-4 inline-block flex-shrink-0" />
                     <span>{post.category}</span>
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
+
+                  {/* Title */}
+                  <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 xs:mb-3 sm:mb-4">
                     {post.title}
                   </h2>
-                  <div className="relative aspect-video md:h-64 rounded-lg md:rounded-xl overflow-hidden">
+
+                  {/* Image Container */}
+                  <div className="relative aspect-video w-full rounded-lg xs:rounded-xl overflow-hidden">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 80vw, 1200px"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                      priority={index < 2} // Load first two images immediately
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
                   </div>
                 </div>
               </button>
 
+              {/* Expandable Content */}
               <motion.div
                 initial={{ height: 0 }}
                 animate={{ height: expandedPost === index ? 'auto' : 0 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6">
+                <div className="px-3 xs:px-4 sm:px-5 md:px-6 pb-3 xs:pb-4 sm:pb-5 md:pb-6">
                   <div className="prose prose-invert max-w-none 
-                    prose-table:overflow-x-auto prose-code:break-words
-                    prose-td:px-3 prose-td:py-2 prose-th:px-3 prose-th:py-2
-                    prose-code:text-sm sm:prose-code:text-base">
+                    prose-sm xs:prose-base sm:prose-lg  // Responsive typography
+                    prose-table:overflow-x-auto prose-table:max-w-[calc(100vw-2rem)] xs:prose-table:max-w-[calc(100vw-3rem)]  // Table overflow
+                    prose-code:break-words prose-code:font-mono prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                    prose-td:px-2 prose-td:py-1.5 prose-th:px-2 prose-th:py-1.5">
                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
                   </div>
                 </div>
@@ -242,17 +252,18 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
           ))}
         </div>
 
+        {/* CTA Section */}
         <motion.div
           initial={{ scale: 0.9 }}
           whileInView={{ scale: 1 }}
-          className="mt-12 sm:mt-16 md:mt-20 text-center"
+          className="mt-10 sm:mt-14 md:mt-20 text-center"
         >
           <a
             href="/opportunities"
-            className="inline-block w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg md:rounded-xl hover:scale-105 transition-transform"
+            className="inline-block w-full xs:w-auto bg-gradient-to-r from-purple-600 to-blue-600 text-white px-5 py-2.5 xs:px-6 xs:py-3 sm:px-8 sm:py-4 text-sm xs:text-base sm:text-lg font-semibold rounded-md xs:rounded-lg sm:rounded-xl hover:scale-105 transition-transform"
           >
             Explore AI Training Opportunities
-            <FiArrowUpRight className="ml-2 inline-block" />
+            <FiArrowUpRight className="ml-1.5 xs:ml-2 inline-block" />
           </a>
         </motion.div>
       </div>
