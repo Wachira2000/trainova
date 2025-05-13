@@ -65,7 +65,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-zinc-300 hover:text-purple-400 p-2"
+            className="md:hidden text-zinc-300 hover:text-purple-400 p-2 cursor-pointer"
           >
             {isOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
           </button>
