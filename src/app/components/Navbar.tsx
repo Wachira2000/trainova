@@ -45,7 +45,7 @@ const Navbar = () => {
               <MotionLink
                 key={item.name}
                 href={item.path}
-                className={`text-zinc-300 hover:text-purple-400 transition-colors relative ${
+                className={`text-zinc-300 transition-colors relative ${
                   item.name === 'View Opportunities' 
                     ? 'ml-4 bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform shadow-lg'
                     : ''
@@ -56,7 +56,7 @@ const Navbar = () => {
               >
                 {item.name}
                 {item.name !== 'View Opportunities' && (
-                  <span className="absolute bottom-0 left-0 w-0 h-px bg-purple-400 transition-all group-hover:w-full" />
+                  <span className="absolute bottom-0 left-0 w-0 h-px transition-all group-hover:w-full" />
                 )}
               </MotionLink>
             ))}
@@ -65,7 +65,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-zinc-300 hover:text-purple-400 p-2 cursor-pointer"
+            className="md:hidden text-zinc-300 p-2 cursor-pointer"
           >
             {isOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
           </button>
@@ -85,7 +85,7 @@ const Navbar = () => {
                   <Link
                     key={item.name}
                     href={item.path}
-                    className={`block text-zinc-300 hover:text-purple-400 transition-colors ${
+                    className={`block text-zinc-300 transition-colors ${
                       item.name === 'View Opportunities'
                         ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg text-center'
                         : ''

@@ -16,9 +16,9 @@ const HeroSection = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-              Build the Future of{' '}
+              Build the {' '}
               <span className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-                AI
+              Future of AI
               </span>{' '}
               with Your Expertise
             </h1>
@@ -47,7 +47,7 @@ const HeroSection = () => {
           >
             {[
               { value: '100+', label: 'Experts' },
-              { value: '300K', label: 'Assignments' },
+              { value: '30K+', label: 'Assignments' },
               { value: '$1M+', label: 'Earned' },
             ].map((stat, index) => (
               <div key={index} className="bg-gray-800/50 p-4 sm:p-6 rounded-lg sm:rounded-xl">
