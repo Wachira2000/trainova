@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import {
+  FaFingerprint,
   FaDatabase,
   FaShieldAlt,
   FaUserLock,
@@ -10,9 +11,7 @@ import {
   FaTrashAlt,
   FaChevronDown,
   FaGlobeAmericas,
-  FaLockOpen,
-  FaUser,
-  FaStar
+  FaLockOpen
 } from 'react-icons/fa';
 import { useState } from 'react';
 
@@ -20,20 +19,18 @@ const PrivacyPolicy = () => {
   const [openSection, setOpenSection] = useState<number | null>(null);
   
   const dataTypes = [
+    
     {
-      icon: FaUser,
-      title: "Account Data",
-      description: "To create your trainer profile, we collect personal information such as your name, email address, and contact details. This allows us to communicate with you and manage your account."
+      icon: FaNetworkWired,
+      title: "Behavioral Data",
+      description: "Interaction patterns with AI interfaces",
+      retention: "Anonymized after 6 months"
     },
     {
-      icon: FaStar,
-      title: "Expertise Data",
-      description: "We collect information about your professional background, skills, and areas of expertise. This helps us match you with relevant AI training projects and opportunities."
-    },
-    {
-      icon: FaDatabase,
-      title: "Training Data",
-      description: "As you contribute to AI training, we collect the data you provide, which may include text, images, or other formats, to improve our models and services."
+      icon: FaRegChartBar,
+      title: "Performance Metrics",
+      description: "Model improvement tracking data",
+      retention: "Indefinitely for research"
     }
   ];
 
@@ -135,6 +132,10 @@ const PrivacyPolicy = () => {
                 <h3 className="text-xl font-bold text-white">{dataType.title}</h3>
               </div>
               <p className="text-zinc-300 mb-2">{dataType.description}</p>
+              <div className="text-sm text-cyan-400 flex items-center gap-2">
+                <FaChevronDown className="text-xs" />
+                Retention: {dataType.retention}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -150,7 +151,7 @@ const PrivacyPolicy = () => {
             >
               <button
                 onClick={() => setOpenSection(openSection === section ? null : section)}
-                className="w-full p-6 text-left flex justify-between items-center cursor-pointer"
+                className="w-full p-6 text-left flex justify-between items-center"
               >
                 <h3 className="text-xl font-bold text-white">
                   {section === 1 && 'Differential Privacy Implementation'}
