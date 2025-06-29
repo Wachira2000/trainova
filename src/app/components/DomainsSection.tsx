@@ -20,7 +20,7 @@ const DomainsSection = () => {
   const categories = [
     {icon: FaPenFancy, title: 'Creative Writing', color: 'from-pink-500 to-purple-500' },
     { icon: FaSeedling, title: 'Generalist', color: 'from-green-500 to-teal-500' },
-    { icon: FaCalculator, title: 'Math', color: 'from-purple-500 to-indigo-500' },
+    { icon: FaCalculator, title: 'Math', color: 'from-cyan-500 to-blue-500' },
     { icon: FaFlask, title: 'Chemistry', color: 'from-cyan-500 to-blue-500' },
     { icon: FaBalanceScale, title: 'Law', color: 'from-orange-500 to-red-500' },
     { icon: FaHistory, title: 'History', color: 'from-yellow-500 to-amber-500' },
@@ -40,7 +40,7 @@ const DomainsSection = () => {
           [...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute bg-purple-500 rounded-full"
+              className="absolute bg-cyan-500 rounded-full"
               style={{
                 width: Math.random() * 10 + 5 + 'px',
                 height: Math.random() * 10 + 5 + 'px',
@@ -110,17 +110,17 @@ const DomainsSection = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             whileHover={{ scale: 1.01 }}
-            className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 p-1 rounded-2xl cursor-pointer group"
+            className="bg-gradient-to-br from-cyan-500/50 to-blue-600/50 p-1 rounded-2xl cursor-pointer group"
           >
             <div className="bg-gray-900 rounded-xl p-8 text-center">
-              <FaPlusCircle className="h-12 w-12 text-purple-400 mx-auto mb-4" />
+              <FaPlusCircle className="h-12 w-12 text-cyan-400 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-white mb-4">
                 And 20+ Other Expert Domains
               </h3>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center bg-gradient-to-r from-purple-500 to-blue-500 text-white px-8 py-3 rounded-lg transition-transform"
+                className="inline-flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-lg transition-transform"
               >
                 Discover All Opportunities
                 <span className="ml-2">→</span>

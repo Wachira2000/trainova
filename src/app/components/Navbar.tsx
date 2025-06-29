@@ -48,7 +48,7 @@ const Navbar = () => {
                 className={`text-zinc-300 transition-colors relative ${
                   item.name === 'View Opportunities' 
                     ? 'ml-4 bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform shadow-lg'
-                    : ''
+                    : 'hover:text-cyan-400'
                 }`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -88,7 +88,7 @@ const Navbar = () => {
                     className={`block text-zinc-300 transition-colors ${
                       item.name === 'View Opportunities'
                         ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg text-center'
-                        : ''
+                        : 'hover:text-cyan-400'
                     }`}
                     onClick={() => setIsOpen(false)}
                   >

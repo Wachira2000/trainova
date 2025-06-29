@@ -100,7 +100,7 @@ const HowItWorksPage = () => {
           </p>
           <Link
             href="/opportunities"
-            className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:scale-105 transition-transform"
+            className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:scale-105 transition-transform"
           >
             Get Started Now
             <FaUserCheck className="ml-2 inline-block" />
@@ -117,15 +117,15 @@ const HowItWorksPage = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.1 }}
-              className="relative bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-purple-400 transition-all group"
+              className="relative bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all group"
             >
               {/* Gradient Decoration */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
               
               <div className="relative z-10">
                 <div className="flex items-start gap-4 mb-6">
-                  <div className="p-3 bg-purple-500/20 rounded-lg">
-                    <step.icon className="h-8 w-8 text-purple-400" />
+                  <div className="p-3 bg-cyan-500/20 rounded-lg">
+                    <step.icon className="h-8 w-8 text-cyan-400" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-2">{step.title}</h2>
@@ -135,14 +135,14 @@ const HowItWorksPage = () => {
 
                 <div className="border-t border-gray-700 pt-6">
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="text-sm text-purple-400">Average Duration</span>
+                    <span className="text-sm text-cyan-400">Average Duration</span>
                     <span className="text-sm text-zinc-400">{step.duration}</span>
                   </div>
                   
                   <ul className="space-y-3">
                     {step.details.map((detail, i) => (
                       <li key={i} className="flex items-start text-zinc-300">
-                        <span className="text-purple-400 mr-2">▹</span>
+                        <span className="text-cyan-400 mr-2">▹</span>
                         {detail}
                       </li>
                     ))}
@@ -157,7 +157,7 @@ const HowItWorksPage = () => {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="mt-20 bg-gray-800/30 rounded-2xl p-8 border border-purple-400/20"
+          className="mt-20 bg-gray-800/30 rounded-2xl p-8 border border-cyan-400/20"
         >
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
@@ -178,10 +178,10 @@ const HowItWorksPage = () => {
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <button className="p-4 bg-gray-900/50 rounded-lg text-zinc-300 hover:bg-purple-500/20 transition-colors">
+                  <button className="p-4 bg-gray-900/50 rounded-lg text-zinc-300 hover:bg-cyan-500/20 transition-colors">
                     Request Clarification
                   </button>
-                  <button className="p-4 bg-gray-900/50 rounded-lg text-zinc-300 hover:bg-purple-500/20 transition-colors">
+                  <button className="p-4 bg-gray-900/50 rounded-lg text-zinc-300 hover:bg-cyan-500/20 transition-colors">
                     Submit Analysis
                   </button>
                 </div>
@@ -190,8 +190,8 @@ const HowItWorksPage = () => {
             
             <div className="bg-gray-900/50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-8 w-8 bg-purple-500/20 rounded-full flex items-center justify-center">
-                  <FaCode className="text-purple-400" />
+                <div className="h-8 w-8 bg-cyan-500/20 rounded-full flex items-center justify-center">
+                  <FaCode className="text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-white">Sample AI Response</h3>
               </div>
@@ -220,7 +220,7 @@ const HowItWorksPage = () => {
         >
           <Link
             href="/opportunities"
-            className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-12 py-5 rounded-2xl text-xl font-semibold hover:scale-105 transition-transform"
+            className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-12 py-5 rounded-2xl text-xl font-semibold hover:scale-105 transition-transform"
           >
             Start Your AI Training Journey Today
             <FaArrowRight className="ml-2 inline-block animate-pulse" />

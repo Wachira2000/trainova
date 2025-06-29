@@ -22,7 +22,7 @@ const Footer = () => {
   return (
     <footer className="relative bg-gray-900 border-t border-gray-800 mt-20">
       {/* Gradient Overlay - Moved behind content */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent z-0" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -62,7 +62,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-purple-400 transition-colors duration-200 cursor-pointer block"
+                    className="text-zinc-400 hover:text-cyan-400 transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -83,7 +83,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-purple-400 transition-colors duration-200 cursor-pointer block"
+                    className="text-zinc-400 hover:text-cyan-400 transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -101,7 +101,7 @@ const Footer = () => {
           
           <motion.button
             onClick={scrollToTop}
-            className="flex items-center text-zinc-400 hover:text-purple-400 transition-colors cursor-pointer"
+            className="flex items-center text-zinc-400 hover:text-cyan-400 transition-colors cursor-pointer"
             whileHover={{ y: -2 }}
           >
             Back to Top

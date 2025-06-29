@@ -48,7 +48,7 @@ const FAQPage = () => {
                 href="https://www.udemy.com/certificate-link"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-purple-400 hover:text-purple-300 underline"
+                className="text-cyan-400 hover:text-cyan-300 underline"
               >
 certificate in AI Data Trainer from Udemy {/* Ensure no leading space here */}
               </a>
@@ -186,7 +186,7 @@ certificate in AI Data Trainer from Udemy
           <input
             type="text"
             placeholder="Search FAQs...." // Changed placeholder text slightly
-            className="w-full pl-10 pr-4 py-3 bg-gray-800 rounded-lg text-zinc-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full pl-10 pr-4 py-3 bg-gray-800 rounded-lg text-zinc-300 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -203,9 +203,9 @@ certificate in AI Data Trainer from Udemy
         {[{title: 'How are payments processed?', icon: '💸', desc: 'Weekly payments via 3 methods with real-time tracking'},
           {title: 'Can I work internationally?', icon: '🌍', desc: 'Work from anywhere - 85% of experts work across timezones'},
           {title: 'What AI models do we train?', icon: '🧠', desc: 'Specializing in LLMs, diffusion models, and multi-modal architectures'}].map((q, i) => (
-          <div key={i} className="p-6 bg-gray-800/30 rounded-xl border border-gray-700 hover:border-purple-400 transition-colors duration-300"> {/* Added duration */}
+          <div key={i} className="p-6 bg-gray-800/30 rounded-xl border border-gray-700 hover:border-cyan-400 transition-colors duration-300"> {/* Added duration */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-purple-500/20 rounded-lg">
+              <div className="p-2 bg-cyan-500/20 rounded-lg">
                 <span className="text-xl">{q.icon}</span> {/* Made icon slightly bigger for visibility */}
               </div>
               <h3 className="text-lg font-semibold text-white">{q.title}</h3>
@@ -237,7 +237,7 @@ certificate in AI Data Trainer from Udemy
               >
                 <div className="flex items-center gap-4">
                   <span className="text-2xl">{category.icon}</span>
-                  <h2 className="text-xl sm:text-2xl font-bold text-purple-400">{category.title}</h2> {/* Responsive text size */}
+                  <h2 className="text-xl sm:text-2xl font-bold text-cyan-400">{category.title}</h2> {/* Responsive text size */}
                 </div>
                 {activeCategory === category.title ? (
                   <FiChevronUp className="text-xl text-zinc-400 flex-shrink-0" /> // Added flex-shrink-0
@@ -267,7 +267,7 @@ certificate in AI Data Trainer from Udemy
                           <ul className="space-y-2 pl-1"> {/* Adjusted padding for alignment with prose */}
                             {q.list.map((item, i) => (
                               <li key={i} className="flex items-start">
-                                <span className="text-purple-400 mr-2 mt-1 flex-shrink-0">▸</span> {/* mt-1 for better alignment, flex-shrink-0 */}
+                                <span className="text-cyan-400 mr-2 mt-1 flex-shrink-0">▸</span> {/* mt-1 for better alignment, flex-shrink-0 */}
                                 <span>{item}</span> {/* Wrap item in span for consistent styling if item is JSX */}
                               </li>
                             ))}
@@ -300,9 +300,9 @@ certificate in AI Data Trainer from Udemy
         viewport={{ once: true, amount: 0.2 }}
         className="max-w-7xl mx-auto mt-20 text-center"
       >
-        <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 p-8 rounded-2xl border border-purple-500/30"> {/* Added subtle border */}
+        <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 p-8 rounded-2xl border border-cyan-500/30"> {/* Added subtle border */}
           <div className="flex flex-col items-center gap-6">
-            <FiMessageSquare className="text-4xl text-purple-400" />
+            <FiMessageSquare className="text-4xl text-cyan-400" />
             <h2 className="text-3xl font-bold text-white">Still Have Questions?</h2>
             <p className="text-zinc-300 max-w-xl mx-auto">
               Our expert support team is available 24/7 to assist you
@@ -312,7 +312,7 @@ certificate in AI Data Trainer from Udemy
                 href="mailto:onboarding@cognitoai.io"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-purple-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-purple-500 transition-colors duration-300 shadow-lg hover:shadow-purple-500/50" // Added shadow
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-cyan-600/90 transition-colors duration-300 shadow-lg hover:shadow-cyan-500/50" // Added shadow
               >
                 <FiMail className="inline-block" /> Email Support
               </a>

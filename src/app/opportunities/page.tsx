@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaCode } from 'react-icons/fa';
@@ -33,9 +33,76 @@ interface Job {
   qualifications: string[];
 }
 
+// A dedicated component for the Basin form embed.
+// This encapsulates the iframe and its specific script logic.
+const BasinFormComponent = () => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    let intervalId: NodeJS.Timeout;
+
+    // This function handles messages from the iframe (for resizing) and the parent window (for redirection).
+    const handleMessage = (event: MessageEvent) => {
+      // Action to set the height of the iframe
+      if (iframe && event.data.action === 'setHeight') {
+        iframe.style.height = event.data.height + 'px';
+      }
+
+      // Action to redirect the parent window after submission
+      if (event.data.action === 'redirect') {
+        window.location.href = event.data.url;
+      }
+    };
+
+    // This function runs when the iframe content has loaded.
+    const handleLoad = () => {
+      // Immediately request the height from the iframe content
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage('getHeight', '*');
+      }
+      
+      // Periodically request the height to handle dynamic content changes within the form
+      intervalId = setInterval(() => {
+        if (iframe.contentWindow) {
+          iframe.contentWindow.postMessage('getHeight', '*');
+        }
+      }, 500);
+    };
+
+    // Add event listeners
+    window.addEventListener('message', handleMessage);
+    iframe.addEventListener('load', handleLoad);
+
+    // Cleanup function to remove listeners and interval when the component is unmounted
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      iframe.removeEventListener('load', handleLoad);
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, []); // The empty dependency array ensures this effect runs only once on mount
+
+  return (
+    <iframe
+      ref={iframeRef}
+      className="basinIframe"
+      src="https://usebasin.com/form/1b07b4b83c40/view/992b2aadf2e8?iframe=true"
+      frameBorder="0"
+      style={{ border: 'none', overflow: 'hidden', width: '100%', minHeight: '100vh' }}
+      title="Application Form"
+    />
+  );
+};
+
+
 const OpportunitiesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +169,11 @@ const OpportunitiesPage = () => {
 
     fetchJobs();
   }, []);
+  
+  const handleCloseJobModal = () => {
+    setSelectedJob(null);
+    setShowApplicationForm(false);
+  };
 
   const categories = Array.from(new Set(jobs.map((job) => job.category)));
   const filteredJobs = selectedCategory
@@ -123,7 +195,7 @@ const OpportunitiesPage = () => {
           {error}
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg block mx-auto cursor-pointer"
+            className="mt-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg block mx-auto cursor-pointer"
           >
             Retry
           </button>
@@ -157,7 +229,7 @@ const OpportunitiesPage = () => {
             onClick={() => setSelectedCategory(null)}
             className={`px-6 py-2 rounded-full cursor-pointer ${
               !selectedCategory
-                ? 'bg-purple-600 text-white'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                 : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
             }`}
           >
@@ -169,7 +241,7 @@ const OpportunitiesPage = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full flex items-center gap-2 cursor-pointer ${
                 selectedCategory === category
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                   : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
               }`}
             >
@@ -185,18 +257,18 @@ const OpportunitiesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 hover:border-purple-400 transition-all"
+              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className="p-3 bg-purple-500/20 rounded-lg">
+                <div className="p-3 bg-gradient-to-r from-cyan-500 to-blue-600/20 rounded-lg">
                   {React.createElement(job.icon, {
-                    className: 'h-6 w-6 text-purple-400',
+                    className: 'h-6 w-6 text-cyan-400',
                   })}
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">{job.title}</h2>
                   <div className="mt-2">
-                    <span className="text-purple-400 text-sm bg-purple-900/30 px-3 py-1 rounded-full">
+                    <span className="text-cyan-400 text-sm bg-cyan-900/30 px-3 py-1 rounded-full">
                       {job.category}
                     </span>
                   </div>
@@ -204,12 +276,12 @@ const OpportunitiesPage = () => {
               </div>
               <div className="flex justify-between items-center mt-6">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-purple-300">{job.rate}</p>
+                  <p className="text-sm font-medium text-cyan-300">{job.rate}</p>
                   <p className="text-sm text-zinc-400">{job.duration}</p>
                 </div>
                 <button
                   onClick={() => setSelectedJob(job)}
-                  className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
                 >
                   Apply Now
                   <FaCode className="text-sm" />
@@ -224,7 +296,7 @@ const OpportunitiesPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            onClick={() => setSelectedJob(null)}
+            onClick={handleCloseJobModal}
           >
             <motion.div
               initial={{ scale: 0.95 }}
@@ -233,14 +305,14 @@ const OpportunitiesPage = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-purple-500/20 rounded-lg">
+                <div className="p-3 bg-gradient-to-r from-cyan-500 to-blue-600/20 rounded-lg">
                   {React.createElement(selectedJob.icon, {
-                    className: 'h-6 w-6 text-purple-400',
+                    className: 'h-6 w-6 text-cyan-400',
                   })}
                 </div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">{selectedJob.title}</h2>
-                  <p className="text-purple-400 mt-1">{selectedJob.category}</p>
+                  <p className="text-cyan-400 mt-1">{selectedJob.category}</p>
                 </div>
               </div>
 
@@ -285,28 +357,28 @@ const OpportunitiesPage = () => {
                   <h3 className="text-lg font-bold text-white mb-2">✨ Perks and Benefits</h3>
                   <div className="space-y-3">
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaGlobe className="text-purple-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaGlobe className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Remote work</p>
                         <p className="text-zinc-400 text-sm">Work from the comfort of your home</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaClock className="text-purple-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaClock className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Flexible hours</p>
                         <p className="text-zinc-400 text-sm">You set your schedule</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaMoneyBillWave className="text-purple-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaMoneyBillWave className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Weekly payouts</p>
                         <p className="text-zinc-400 text-sm">Get paid promptly every week</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaLightbulb className="text-purple-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaLightbulb className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Flex your expertise</p>
                         <p className="text-zinc-400 text-sm">Help shape the future of AI</p>
@@ -321,14 +393,14 @@ const OpportunitiesPage = () => {
                     {[{ icon: FaFileAlt, text: 'Fill in your application' }, { icon: FaCheckCircle, text: 'Verify your details and certification' }, { icon: FaClipboardList, text: 'Pass a skills assessment or interview' }, { icon: FaRocket, text: 'Start working and earning!' }].map((step, index) => (
                       <div key={index} className="flex items-center">
                         <div className="flex flex-col items-center">
-                          <div className="bg-purple-500/20 p-3 rounded-full mb-2">
-                            <step.icon className="h-6 w-6 text-purple-400" />
+                          <div className="bg-gradient-to-r from-cyan-500 to-blue-600/20 p-3 rounded-full mb-2">
+                            <step.icon className="h-6 w-6 text-cyan-400" />
                           </div>
                           <p className="text-white font-medium text-center max-w-[120px]">{step.text}</p>
                         </div>
                         {index < 3 && (
                           <div className="mx-2">
-                            <FaArrowRight className="h-5 w-5 text-purple-400 mx-4" />
+                            <FaArrowRight className="h-5 w-5 text-cyan-400 mx-4" />
                           </div>
                         )}
                       </div>
@@ -338,12 +410,12 @@ const OpportunitiesPage = () => {
                     {[{ icon: FaFileAlt, text: 'Fill in your application' }, { icon: FaCheckCircle, text: 'Verify your details and certification' }, { icon: FaClipboardList, text: 'Pass a skills assessment or interview' }, { icon: FaRocket, text: 'Start working and earning!' }].map((step, index) => (
                       <div key={index} className="flex">
                         <div className="flex flex-col items-center mr-4">
-                          <div className="bg-purple-500/20 p-3 rounded-full mb-2">
-                            <step.icon className="h-6 w-6 text-purple-400" />
+                          <div className="bg-gradient-to-r from-cyan-500 to-blue-600/20 p-3 rounded-full mb-2">
+                            <step.icon className="h-6 w-6 text-cyan-400" />
                           </div>
                           {index < 3 && (
                             <div className="flex-grow">
-                              <FaArrowDown className="h-5 w-5 text-purple-400 my-1" />
+                              <FaArrowDown className="h-5 w-5 text-cyan-400 my-1" />
                             </div>
                           )}
                         </div>
@@ -357,23 +429,52 @@ const OpportunitiesPage = () => {
               </div>
 
               <div className="mt-8 flex justify-end gap-4">
-                <button onClick={() => setSelectedJob(null)} className="px-4 py-2 text-zinc-300 hover:text-white transition-colors cursor-pointer">Close</button>
-                <a href="https://forms.gle/fACNFy3vMSc5AU857" target="_blank" rel="noopener noreferrer" className="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
+                <button onClick={handleCloseJobModal} className="px-4 py-2 text-zinc-300 hover:text-white transition-colors cursor-pointer">Close</button>
+                <button onClick={() => setShowApplicationForm(true)} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
                   Continue to Application
                   <FaCode className="text-sm" />
-                </a>
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
+        
+        {selectedJob && showApplicationForm && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed inset-0 z-[60]"
+            >
+              <motion.div
+                initial={{ opacity: 0.95, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gray-900 w-full h-full flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-4 border-b border-gray-700 flex justify-between items-center flex-shrink-0">
+                    <h2 className="text-xl font-bold text-white">Apply for {selectedJob.title}</h2>
+                    <button
+                        onClick={() => setShowApplicationForm(false)}
+                        className="text-zinc-400 hover:text-white transition-colors text-3xl leading-none px-2 rounded-md cursor-pointer"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div className="flex-grow overflow-y-auto">
+                  <BasinFormComponent />
+                </div>
+              </motion.div>
+            </motion.div>
+        )}
 
         <motion.div initial={{ scale: 0.9 }} whileInView={{ scale: 1 }} className="mt-20 text-center">
-          <div className="bg-gray-800/30 p-8 rounded-2xl border border-purple-400/20">
+          <div className="bg-gray-800/30 p-8 rounded-2xl border border-cyan-400/20">
             <h2 className="text-3xl font-bold text-white mb-4">Not Seeing Your Expertise?</h2>
             <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
               We're constantly expanding our domains. Join our talent network to be notified of new opportunities matching your skills.
             </p>
-            <a href="mailto:talent@cognitoai.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer">
+            <a href="mailto:talent@cognitoai.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer">
               Join Talent Network
             </a>
           </div>

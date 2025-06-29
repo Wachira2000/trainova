@@ -18,20 +18,20 @@ const TrainingInterface = () => {
             <h2 className="text-3xl font-bold text-white">Rating & Ranking</h2>
           </div>
           
-          <div className="bg-gray-800/30 p-6 rounded-xl border border-gray-700">
+          <div className="bg-gray-800/30 p-6 rounded-xl border border-cyan-400/30">
             <p className="text-zinc-300 mb-4">
               Evaluate AI responses based on accuracy and quality. Your expertise helps train models to deliver better results.
             </p>
             
             <div className="space-y-4">
-              <div className="p-4 bg-gray-900/50 rounded-lg border border-purple-400/30">
+              <div className="p-4 bg-gray-900/50 rounded-lg">
                 <h3 className="text-white font-semibold mb-2">Sample Task:</h3>
                 <p className="text-zinc-300">Which response better explains quantum computing?</p>
                 <div className="mt-4 grid gap-4">
                   <div className="p-3 rounded-lg bg-gray-800">
                     <p className="text-zinc-300 text-sm">Response A: Quantum bits exist in superposition...</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-gray-800 border border-purple-400/30">
+                  <div className="p-3 rounded-lg bg-gray-800 border border-cyan-400/30">
                     <p className="text-zinc-300 text-sm">Response B: Qubits leverage quantum states to...</p>
                   </div>
                 </div>
@@ -55,7 +55,7 @@ const TrainingInterface = () => {
             <div className="grid md:grid-cols-3 gap-6 mb-6">
               {/* Step 1 */}
               <div className="p-4 bg-gray-900/50 rounded-lg">
-                <div className="text-purple-400 mb-2">1. Write Prompt</div>
+                <div className="text-cyan-400 mb-2">1. Write Prompt</div>
                 <p className="text-zinc-300 text-sm">
                   Create clear instructions for the AI model to follow
                 </p>
@@ -66,7 +66,7 @@ const TrainingInterface = () => {
 
               {/* Step 2 */}
               <div className="p-4 bg-gray-900/50 rounded-lg">
-                <div className="text-purple-400 mb-2">2. Edit Response</div>
+                <div className="text-cyan-400 mb-2">2. Edit Response</div>
                 <p className="text-zinc-300 text-sm">
                   Refine the AI's output to improve clarity and accuracy
                 </p>
@@ -78,7 +78,7 @@ const TrainingInterface = () => {
 
               {/* Step 3 */}
               <div className="p-4 bg-gray-900/50 rounded-lg">
-                <div className="text-purple-400 mb-2">3. Finalize</div>
+                <div className="text-cyan-400 mb-2">3. Finalize</div>
                 <p className="text-zinc-300 text-sm">
                   Submit your improved version to train the AI model
                 </p>
@@ -103,7 +103,7 @@ const TrainingInterface = () => {
         >
           <a
             href="/opportunities"
-            className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:scale-105 transition-transform"
+            className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:scale-105 transition-transform"
           >
             Start Contributing
           </a>

@@ -11,14 +11,14 @@ const FeaturesSection = () => {
       title: "Share Your Expertise",
       description: "Contribute your unique knowledge to train cutting-edge AI models",
       stats: "$2,583.55 avg. monthly earnings",
-      color: "from-purple-500 to-blue-500"
+      color: "from-cyan-500 to-blue-500"
     },
     {
       icon: FaUsers,
       title: "Connect & Collaborate",
       description: "Join our global network of AI trainers and domain experts",
       stats: "100+ active experts",
-      color: "from-cyan-500 to-teal-500"
+      color: "from-cyan-500 to-blue-500"
     },
     {
       icon: FaWallet,
@@ -60,7 +60,7 @@ const FeaturesSection = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ delay: index * 0.2 }}
-              className="group relative bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-purple-400 transition-all"
+              className="group relative bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
             >
               {/* Gradient icon */}
               <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-br ${feature.color} p-3 rounded-full`}>
@@ -86,7 +86,7 @@ const FeaturesSection = () => {
               </div>
 
               {/* Hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
             </motion.div>
           ))}
         </div>
@@ -98,12 +98,12 @@ const FeaturesSection = () => {
           className="mt-20 text-center"
         >
           <div className="inline-block relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-1000" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-1000" />
             <MotionLink
               href="/opportunities"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative bg-gradient-to-br from-purple-600 to-cyan-600 text-white px-12 py-4 rounded-xl text-xl font-semibold flex items-center gap-3"
+              className="relative bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-12 py-4 rounded-xl text-xl font-semibold flex items-center gap-3"
             >
               <FaHandshake className="text-2xl" />
               Start Earning Now

@@ -48,7 +48,7 @@ const FAQSection = () => {
             href="https://www.udemy.com/certificate-link"  // Replace with actual URL
             target="_blank"
             rel="noopener noreferrer"
-            className="text-purple-400 hover:text-purple-300 underline"
+            className="text-cyan-400 hover:text-cyan-300 underline"
           >
             Certificate in AI Data Trainer from Udemy
           </a>{' '}
@@ -103,7 +103,7 @@ const FAQSection = () => {
                 onClick={() => toggleFAQ(section.category, sectionIndex)}
                 className="w-full flex justify-between items-center py-6 text-left cursor-pointer"
               >
-                <span className="text-xl font-semibold text-purple-400">
+                <span className="text-xl font-semibold text-cyan-400">
                   0{sectionIndex + 1} — {section.category}
                 </span>
                 {visibleCategory === section.category ? (
@@ -123,7 +123,7 @@ const FAQSection = () => {
               >
                 <div className="pb-6 space-y-4">
                   {section.items.map((item, itemIndex) => (
-                    <div key={item.question} className="ml-6 border-l-2 border-purple-400/30 pl-4">
+                    <div key={item.question} className="ml-6 border-l-2 border-cyan-400/30 pl-4">
                       <h3 className="text-lg font-medium text-white">{item.question}</h3>
                       <p className="mt-2 text-zinc-300">{item.answer}</p>
                     </div>
@@ -137,7 +137,7 @@ const FAQSection = () => {
         <div className="mt-12 text-center">
           <Link
             href="/faq"
-            className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors"
+            className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
           >
             See All FAQs
             <FiChevronDown className="ml-2 transform rotate-90" />
