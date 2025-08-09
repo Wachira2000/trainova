@@ -20,7 +20,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gray-900 border-t border-gray-800 mt-20">
+    <footer className="relative bg-gray-900 border-t border-gray-800">
       {/* Gradient Overlay - Moved behind content */}
       <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent z-0" />
       
