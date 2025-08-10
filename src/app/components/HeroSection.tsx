@@ -31,7 +31,7 @@ const HeroSection = () => {
               href="/opportunities"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold flex items-center gap-2"
+              className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold inline-flex items-center gap-2"
             >
               View Opportunities
               <FaArrowUpRightFromSquare className="text-sm" />
