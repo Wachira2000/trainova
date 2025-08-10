@@ -205,9 +205,9 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
                 <div className="p-3 xs:p-4 sm:p-5 md:p-6">
                   {/* Metadata Row */}
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 xs:gap-x-3 xs:gap-y-2 text-xs xs:text-sm sm:text-base text-zinc-400 mb-2 xs:mb-3 sm:mb-4">
-                    <FiClock className="inline-block flex-shrink-0" />
+                    <FiClock className="flex-shrink-0" />
                     <span>{post.readTime}</span>
-                    <FiTag className="ml-1 xs:ml-2 sm:ml-4 inline-block flex-shrink-0" />
+                    <FiTag className="ml-1 xs:ml-2 sm:ml-4 flex-shrink-0" />
                     <span>{post.category}</span>
                   </div>
 

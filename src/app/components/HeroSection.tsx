@@ -31,7 +31,7 @@ const HeroSection = () => {
               href="/opportunities"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold flex items-center gap-2"
+              className="bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold flex items-center gap-2"
             >
               View Opportunities
               <FaArrowUpRightFromSquare className="text-sm" />
@@ -47,7 +47,7 @@ const HeroSection = () => {
           >
             {[
               { value: '100+', label: 'Experts' },
-            { value: '30K+', label: 'Assignments' },
+            { value: '450k+', label: 'Assignments' },
               { value: '$1M+', label: 'Earned' },
             ].map((stat, index) => (
               <div key={index} className="bg-gray-800/50 p-4 sm:p-6 rounded-lg sm:rounded-xl">
