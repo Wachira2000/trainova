@@ -33,68 +33,445 @@ interface Job {
   qualifications: string[];
 }
 
-// A dedicated component for the Basin form embed.
-// This encapsulates the iframe and its specific script logic.
-const BasinFormComponent = () => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+import { FaThumbsUp } from 'react-icons/fa';
+import Confetti from 'react-confetti';
+import axios from 'axios';
+
+// A dedicated component for the new Application form.
+const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    resume: null as File | null,
+    certificateName: '',
+    issuingOrganization: '',
+    certificateNo: '',
+    certificateUrl: '',
+    certificateFile: null as File | null,
+    educationLevel: '',
+    country: '',
+    state: '',
+    availability: '',
+    computerSpecs: null as File | null,
+    internetSpeedScreenshot: null as File | null,
+    languages: '',
+    weeklyHours: '',
+    privacyPolicy: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [fileNames, setFileNames] = useState({
+    resume: '',
+    certificateFile: '',
+    computerSpecs: '',
+    internetSpeedScreenshot: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const { checked } = e.target as HTMLInputElement;
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+      setFileNames((prev) => ({ ...prev, [name]: files[0].name }));
+    }
+  };
+
+  const handleRemoveFile = (name: keyof typeof fileNames) => {
+    setFormData((prev) => ({ ...prev, [name]: null }));
+    setFileNames((prev) => ({ ...prev, [name]: '' }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    setSuccess(false);
+
+    const data = new FormData();
+    data.append('jobTitle', jobTitle);
+    for (const key in formData) {
+      const value = formData[key as keyof typeof formData];
+      if (value instanceof File) {
+        data.append(key, value);
+      } else {
+        data.append(key, String(value));
+      }
+    }
+
+    try {
+      await axios.post('/api/apply', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setSuccess(true);
+      setShowConfetti(true);
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', resume: null, certificateName: '', issuingOrganization: '', certificateNo: '', certificateUrl: '', certificateFile: null, educationLevel: '', country: '', state: '', availability: '', computerSpecs: null, internetSpeedScreenshot: null, languages: '', weeklyHours: '', privacyPolicy: false });
+      setFileNames({ resume: '', certificateFile: '', computerSpecs: '', internetSpeedScreenshot: '' });
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+    if (success) {
+      const timer = setTimeout(() => setShowConfetti(false), 10000); // Confetti lasts for 10 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
-    let intervalId: NodeJS.Timeout;
+  const FileInput = ({ name, label, required, accept }: { name: keyof typeof fileNames, label: string, required: boolean, accept: string }) => (
+    <div>
+      <label className="block text-sm font-medium text-zinc-300">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      {fileNames[name] ? (
+        <div className="mt-1 flex items-center">
+          <span className="text-green-400">✓</span>
+          <span className="ml-2 text-white">{fileNames[name]}</span>
+          <button type="button" onClick={() => handleRemoveFile(name)} className="ml-4 text-red-400 hover:text-red-500">Remove</button>
+        </div>
+      ) : (
+        <input
+          type="file"
+          name={name}
+          id={name}
+          onChange={handleFileChange}
+          required={required}
+          accept={accept}
+          className="w-full text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-900/50 file:text-cyan-300 hover:file:bg-cyan-800/50 file:cursor-pointer"
+        />
+      )}
+      <p className="mt-1 text-xs text-zinc-500">Accepted file types: {accept}.</p>
+    </div>
+  );
 
-    // This function handles messages from the iframe (for resizing) and the parent window (for redirection).
-    const handleMessage = (event: MessageEvent) => {
-      // Action to set the height of the iframe
-      if (iframe && event.data.action === 'setHeight') {
-        iframe.style.height = event.data.height + 'px';
-      }
-
-      // Action to redirect the parent window after submission
-      if (event.data.action === 'redirect') {
-        window.location.href = event.data.url;
-      }
-    };
-
-    // This function runs when the iframe content has loaded.
-    const handleLoad = () => {
-      // Immediately request the height from the iframe content
-      if (iframe.contentWindow) {
-        iframe.contentWindow.postMessage('getHeight', '*');
-      }
-      
-      // Periodically request the height to handle dynamic content changes within the form
-      intervalId = setInterval(() => {
-        if (iframe.contentWindow) {
-          iframe.contentWindow.postMessage('getHeight', '*');
-        }
-      }, 500);
-    };
-
-    // Add event listeners
-    window.addEventListener('message', handleMessage);
-    iframe.addEventListener('load', handleLoad);
-
-    // Cleanup function to remove listeners and interval when the component is unmounted
-    return () => {
-      window.removeEventListener('message', handleMessage);
-      iframe.removeEventListener('load', handleLoad);
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, []); // The empty dependency array ensures this effect runs only once on mount
+  if (success) {
+    return (
+        <div className="h-full flex items-center justify-center text-center p-8">
+            <div>
+                {showConfetti && <Confetti />}
+                <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                        type: 'spring',
+                        stiffness: 260,
+                        damping: 20,
+                    }}
+                    className="flex justify-center mb-4"
+                >
+                    <FaThumbsUp className="text-6xl text-green-400" />
+                </motion.div>
+                <h1 className="text-3xl font-bold text-center mb-4 text-white">Thank You!</h1>
+                <div className="bg-green-900/50 border border-green-400 text-green-300 p-4 rounded-lg mb-4">
+                    Application submitted successfully!
+                </div>
+            </div>
+        </div>
+    );
+  }
 
   return (
-    <iframe
-      ref={iframeRef}
-      className="basinIframe"
-      src="https://usebasin.com/form/1b07b4b83c40/view/992b2aadf2e8?iframe=true"
-      frameBorder="0"
-      style={{ border: 'none', overflow: 'hidden', width: '100%', minHeight: '100vh' }}
-      title="Application Form"
-    />
+    <div className="p-8">
+        <p className="text-center text-zinc-400 mb-8">
+            Please ensure all required fields marked with a red asterisk (<span className="text-red-500">*</span>) are completed. Missing or incomplete information may delay your application.
+        </p>
+        {error && (
+            <div className="bg-red-900/50 border border-red-400 text-red-300 p-4 rounded-lg mb-6">
+                {error}
+            </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label htmlFor="firstName" className="block text-sm font-medium text-zinc-300">
+                        First Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium text-zinc-300">
+                        Last Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
+                    Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                />
+            </div>
+            <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-zinc-300">
+                    Phone
+                </label>
+                <input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                />
+            </div>
+            <FileInput name="resume" label="Upload Resume" required={true} accept=".pdf,.doc,.docx" />
+
+            <div className="space-y-6 pt-6 border-t border-gray-700">
+                <h2 className="text-2xl font-bold text-white">Education & Qualifications</h2>
+                <p className="text-lg font-medium text-zinc-300">Add your AI Annotation certificate</p>
+                <p className="text-sm text-zinc-400">
+                    Please upload a valid certificate from <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Udemy</a> or <a href="https://www.skillshare.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Skillshare</a>. Certificates that cannot be verified will not be accepted.
+                </p>
+                <div>
+                    <label htmlFor="certificateName" className="block text-sm font-medium text-zinc-300">
+                        Certificate Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="certificateName"
+                        id="certificateName"
+                        value={formData.certificateName}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="issuingOrganization" className="block text-sm font-medium text-zinc-300">
+                        Issuing Organization <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                        name="issuingOrganization"
+                        id="issuingOrganization"
+                        value={formData.issuingOrganization}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    >
+                        <option value="">Select an organization</option>
+                        <option value="Udemy">Udemy</option>
+                        <option value="Skillshare">Skillshare</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="certificateNo" className="block text-sm font-medium text-zinc-300">
+                        Certificate No. <span className="text-red-500">*</span> <span className="text-zinc-500 text-xs">(Input the unique certificate number.)</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="certificateNo"
+                        id="certificateNo"
+                        value={formData.certificateNo}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="certificateUrl" className="block text-sm font-medium text-zinc-300">
+                        Certificate URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="url"
+                        name="certificateUrl"
+                        id="certificateUrl"
+                        value={formData.certificateUrl}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        placeholder="https://www.example.com/certificate/123"
+                    />
+                </div>
+                <FileInput name="certificateFile" label="Certificate File" required={true} accept=".pdf,.jpg,.jpeg,.png" />
+                <div>
+                    <label htmlFor="educationLevel" className="block text-sm font-medium text-zinc-300">
+                        Highest level of education completed <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                        name="educationLevel"
+                        id="educationLevel"
+                        value={formData.educationLevel}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    >
+                        <option value="">Select level</option>
+                        <option value="High School">High School Diploma or GED</option>
+                        <option value="Some College">Some College, no degree</option>
+                        <option value="Associate">Associate Degree</option>
+                        <option value="Bachelor">Bachelor's Degree</option>
+                        <option value="Master">Master's Degree</option>
+                        <option value="Doctorate">Doctorate or higher</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="country" className="block text-sm font-medium text-zinc-300">
+                        Country of residence <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="country"
+                        id="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="state" className="block text-sm font-medium text-zinc-300">
+                        State of residence (if in USA)
+                    </label>
+                    <input
+                        type="text"
+                        name="state"
+                        id="state"
+                        value={formData.state}
+                        onChange={handleChange}
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+            </div>
+
+            <div className="space-y-6 pt-6 border-t border-gray-700">
+                <h2 className="text-2xl font-bold text-white">Availability & Technical Specs</h2>
+                <div>
+                    <label htmlFor="availability" className="block text-sm font-medium text-zinc-300">
+                        Are you available for up to 40 hours a week? <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                        name="availability"
+                        id="availability"
+                        value={formData.availability}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    >
+                        <option value="">Select an option</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <FileInput name="computerSpecs" label="Computer Specifications Screenshot" required={true} accept=".pdf,.doc,.jpg,.jpeg,.png" />
+                <div className="mt-1 text-xs text-zinc-500 space-y-2">
+                    <p className="font-semibold">Windows Instructions:</p>
+                    <ol className="list-decimal list-inside pl-2">
+                        <li>Search for and navigate to "About Your PC".</li>
+                        <li>Take a full, unedited screenshot showing Device Name, Processor, RAM, etc.</li>
+                    </ol>
+                    <p className="font-semibold">Mac Instructions:</p>
+                    <ol className="list-decimal list-inside pl-2">
+                        <li>Navigate to "About This Mac".</li>
+                        <li>Take a full, unedited screenshot showing model, processor, memory, serial number, and macOS version.</li>
+                    </ol>
+                    <p className="font-bold text-red-400">NOTE: Edited or cropped screenshots will not be accepted.</p>
+                </div>
+                <FileInput name="internetSpeedScreenshot" label="Internet Speed Screenshot" required={true} accept=".pdf,.doc,.jpg,.jpeg,.png" />
+                <div className="mt-1 text-xs text-zinc-500 space-y-2">
+                    <ol className="list-decimal list-inside pl-2">
+                        <li>Navigate to <a href="https://www.speedtest.net/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">speedtest.net</a>.</li>
+                        <li>Click "GO" and wait for the test to complete.</li>
+                        <li>Take a full, unedited screenshot of the results.</li>
+                    </ol>
+                    <p className="font-bold text-red-400">NOTE: Edited or cropped screenshots will not be accepted.</p>
+                </div>
+                <div>
+                    <label htmlFor="languages" className="block text-sm font-medium text-zinc-300">
+                        List all languages you're proficient in <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="languages"
+                        id="languages"
+                        value={formData.languages}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="weeklyHours" className="block text-sm font-medium text-zinc-300">
+                        On average, how many hours per week are you available? <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="weeklyHours"
+                        id="weeklyHours"
+                        value={formData.weeklyHours}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    />
+                </div>
+                <div className="flex items-center">
+                    <input
+                        type="checkbox"
+                        name="privacyPolicy"
+                        id="privacyPolicy"
+                        checked={formData.privacyPolicy}
+                        onChange={handleChange}
+                        required
+                        className="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-500 rounded bg-gray-800"
+                    />
+                    <label htmlFor="privacyPolicy" className="ml-2 block text-sm text-zinc-300">
+                        I acknowledge that I've read and agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Privacy Policy</a>. <span className="text-red-500">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <div className="text-center pt-4">
+                <button
+                    type="submit"
+                    disabled={submitting}
+                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 cursor-pointer"
+                >
+                    {submitting ? 'Submitting...' : 'Submit Application'}
+                </button>
+            </div>
+        </form>
+    </div>
   );
 };
 
@@ -456,13 +833,14 @@ const OpportunitiesPage = () => {
                     <h2 className="text-xl font-bold text-white">Apply for {selectedJob.title}</h2>
                     <button
                         onClick={() => setShowApplicationForm(false)}
-                        className="text-zinc-400 hover:text-white transition-colors text-3xl leading-none px-2 rounded-md cursor-pointer"
+                        className="text-zinc-400 hover:text-white transition-colors text-5xl font-light leading-none p-2 rounded-full hover:bg-gray-700 w-12 h-12 flex items-center justify-center"
+                        aria-label="Close application form"
                     >
                         &times;
                     </button>
                 </div>
                 <div className="flex-grow overflow-y-auto">
-                  <BasinFormComponent />
+                  <ApplicationFormComponent jobTitle={selectedJob.title} />
                 </div>
               </motion.div>
             </motion.div>
