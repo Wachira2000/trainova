@@ -6,7 +6,7 @@ import { FaArrowUpRightFromSquare, FaQuoteLeft } from 'react-icons/fa6';
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 pb-16 md:pb-20 px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen md:min-h-0 bg-gradient-to-b from-gray-900 to-gray-800 py-16 md:py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12">
         {/* Left Content */}
         <div className="flex-1 space-y-6 md:space-y-8">
@@ -63,7 +63,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex-1 relative w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl lg:shadow-2xl"
+          className="flex-1 relative w-full aspect-[4/5] md:aspect-video md:h-[500px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl lg:shadow-2xl"
         >
           <Image
             src="/AI Trainers.jpeg"
