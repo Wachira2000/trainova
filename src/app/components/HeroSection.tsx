@@ -63,7 +63,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex-1 relative w-full h-[400px] md:h-[500px] lg:h-[600px] aspect-video rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl lg:shadow-2xl"
+          className="flex-1 relative w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-xl lg:shadow-2xl"
         >
           <Image
             src="/AI Trainers.jpeg"
