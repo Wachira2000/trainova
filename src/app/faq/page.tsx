@@ -309,7 +309,7 @@ certificate in AI Data Trainer from Udemy
             </p>
             <div className="flex gap-4 mt-2"> {/* Added mt-2 */}
               <a
-                href="mailto:onboarding@cognitoai.io"
+                href="mailto:onboarding@trainova.io"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-cyan-600/90 transition-colors duration-300 shadow-lg hover:shadow-cyan-500/50" // Added shadow

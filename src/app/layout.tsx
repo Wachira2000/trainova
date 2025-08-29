@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cognito AI",
+  title: "Trainova",
   description: "Shaping the future of artificial intelligence",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning={true}>
       <body className={`${inter.className} bg-gradient-to-b from-gray-900 to-gray-800`}>
         
       <Analytics/>
@@ -36,7 +36,7 @@ export default function RootLayout({
         <Navbar/>
         
         {/* Main content with padding for navbar height */}
-        <main className="pt-20 min-h-screen"> {/* Adjust pt-20 based on navbar height */}
+        <main className="min-h-screen">
           {children}
         </main>
 

@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
-import { FaArrowUp } from 'react-icons/fa';
+import { FaArrowUp, FaLightbulb } from 'react-icons/fa';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -20,10 +19,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gray-900 border-t border-gray-800">
-      {/* Gradient Overlay - Moved behind content */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/5 to-transparent z-0" />
-      
+    <footer className="relative bg-black border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Company Info */}
@@ -31,21 +27,11 @@ const Footer = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <Link href="/" className="flex items-center w-full max-w-[200px] mb-6">
-              <div className="relative w-full h-[150px]"> 
-                <Image
-                  src="/logo.png"
-                  alt="Cognito AI"
-                  fill
-                  className="object-contain object-left"
-                  priority
-                  style={{
-                    filter: 'drop-shadow(0 0 12px rgba(59, 130, 246, 0.3))'
-                  }}
-                />
-              </div>
+            <Link href="/" className="flex items-center gap-2 text-white text-2xl font-bold mb-6">
+              <FaLightbulb className="text-white" />
+              <span>Trainova</span>
             </Link>
-            <p className="text-zinc-400 mb-4">
+            <p className="text-gray-400 mb-4">
               Shaping the future of artificial intelligence through human expertise
             </p>
           </motion.div>
@@ -56,13 +42,13 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h3 className="text-zinc-200 font-semibold mb-4">Legal</h3>
+            <h3 className="text-white font-semibold mb-4">Legal</h3>
             <ul className="space-y-3">
               {policyLinks.slice(0, 3).map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-cyan-400 transition-colors duration-200 cursor-pointer block"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -77,13 +63,13 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h3 className="text-zinc-200 font-semibold mb-4">Policies</h3>
+            <h3 className="text-white font-semibold mb-4">Policies</h3>
             <ul className="space-y-3">
               {policyLinks.slice(3).map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.path}
-                    className="text-zinc-400 hover:text-cyan-400 transition-colors duration-200 cursor-pointer block"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 cursor-pointer block"
                   >
                     {link.name}
                   </Link>
@@ -95,13 +81,13 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-zinc-500 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Cognito AI. All rights reserved.
+          <div className="text-gray-500 text-sm mb-4 md:mb-0">
+            © {new Date().getFullYear()} Trainova. All rights reserved.
           </div>
           
           <motion.button
             onClick={scrollToTop}
-            className="flex items-center text-zinc-400 hover:text-cyan-400 transition-colors cursor-pointer"
+            className="flex items-center text-gray-400 hover:text-white transition-colors cursor-pointer"
             whileHover={{ y: -2 }}
           >
             Back to Top

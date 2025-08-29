@@ -1,42 +1,36 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
+import fetch from 'node-fetch';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-// This function will run in the background and not block the API response.
-async function processApplicationInBackground(fields: { [key: string]: string }, files: { [key: string]: File }) {
+async function processApplicationInBackground(data: any) {
     try {
         const {
             jobTitle, firstName, lastName, email, phone, certificateName,
             issuingOrganization, certificateNo, certificateUrl, educationLevel,
-            country, state, availability, languages, weeklyHours,
-        } = fields;
+            country, state, availability, languages, weeklyHours, filepaths
+        } = data;
 
         const auth = await getGoogleAuth();
         const sheets = google.sheets({ version: 'v4', auth });
 
-        // --- Prepare File Attachments for Nodemailer ---
         const attachments = [];
-        for (const key in files) {
-            const file = files[key];
-            if (file) {
-                attachments.push({
-                    filename: file.name,
-                    content: Buffer.from(await file.arrayBuffer()),
-                    contentType: file.type,
-                });
+        if (filepaths) {
+            for (const key in filepaths) {
+                const filepath = filepaths[key];
+                if (fs.existsSync(filepath)) {
+                    attachments.push({
+                        filename: path.basename(filepath),
+                        path: filepath,
+                    });
+                }
             }
         }
 
-        // --- Append to Google Sheets ---
         const spreadsheetId = process.env.SPREADSHEET_ID;
-        const range = 'Sheet1!A:P'; // Reduced columns as we removed drive links
+        const range = 'Sheet1!A:P';
         const valueInputOption = 'USER_ENTERED';
         const timestamp = new Date().toISOString();
 
@@ -55,7 +49,6 @@ async function processApplicationInBackground(fields: { [key: string]: string },
             requestBody: { values },
         });
 
-        // --- Send Email Notification with Attachments ---
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS },
@@ -105,10 +98,8 @@ async function getGoogleAuth() {
 
     let credentials;
     try {
-        // First, try to parse it as a raw JSON string
         credentials = JSON.parse(googleCredentials);
     } catch (error) {
-        // If that fails, assume it's Base64 encoded and try to decode it
         try {
             const credentialsJson = Buffer.from(googleCredentials, 'base64').toString('utf-8');
             credentials = JSON.parse(credentialsJson);
@@ -119,59 +110,59 @@ async function getGoogleAuth() {
 
     return new google.auth.GoogleAuth({
         credentials,
-        // Reduced scopes as we no longer need Google Drive
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 }
 
 export async function POST(req: NextRequest) {
-  // --- Environment Variable Check ---
-  const requiredEnvVars = [
-    'GOOGLE_CREDENTIALS',
-    'SPREADSHEET_ID',
-    'GMAIL_USER',
-    'GMAIL_PASS',
-  ];
+    const requiredEnvVars = [
+        'GOOGLE_CREDENTIALS',
+        'SPREADSHEET_ID',
+        'GMAIL_USER',
+        'GMAIL_PASS',
+        'PAYSTACK_SECRET_KEY',
+    ];
 
-  const missingEnvVars = requiredEnvVars.filter(v => !process.env[v]);
+    const missingEnvVars = requiredEnvVars.filter(v => !process.env[v]);
 
-  if (missingEnvVars.length > 0) {
-    console.error(`Missing environment variables: ${missingEnvVars.join(', ')}`);
-    return NextResponse.json(
-      { message: `Server configuration error: Missing required environment variables. Please check server logs.` },
-      { status: 500 }
-    );
-  }
-  // --- End Check ---
+    if (missingEnvVars.length > 0) {
+        console.error(`Missing environment variables: ${missingEnvVars.join(', ')}`);
+        return NextResponse.json(
+            { message: `Server configuration error: Missing required environment variables. Please check server logs.` },
+            { status: 500 }
+        );
+    }
 
-  try {
-    const formData = await req.formData();
-    const fields: { [key: string]: string } = {};
-    const files: { [key: string]: File } = {};
+    try {
+        const allData = await req.json();
+        const { jobTitle, firstName, lastName, email, privacyPolicy, paymentReference } = allData;
 
-    for (const [key, value] of formData.entries()) {
-        if (value instanceof File) {
-            files[key] = value;
-        } else {
-            fields[key] = value;
+        if (!firstName || !lastName || !email || !jobTitle || privacyPolicy !== true || !paymentReference) {
+            return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
         }
+
+        const paystackUrl = `https://api.paystack.co/transaction/verify/${paymentReference}`;
+        const secretKey = process.env.PAYSTACK_SECRET_KEY!;
+
+        const verificationResponse = await fetch(paystackUrl, {
+            headers: {
+                Authorization: `Bearer ${secretKey}`,
+            },
+        });
+
+        const verificationData = await verificationResponse.json();
+
+        if (verificationData.data.status !== 'success') {
+            return NextResponse.json({ message: 'Payment verification failed' }, { status: 400 });
+        }
+
+        processApplicationInBackground(allData);
+
+        return NextResponse.json({ message: 'Application submitted successfully!' }, { status: 200 });
+
+    } catch (error) {
+        console.error('Error in API route:', error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        return NextResponse.json({ message: 'Error submitting application', error: errorMessage }, { status: 500 });
     }
-
-    const { firstName, lastName, email, jobTitle, privacyPolicy } = fields;
-
-    if (!firstName || !lastName || !email || !jobTitle || privacyPolicy !== 'true') {
-      return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
-    }
-
-    // Don't await this. This lets the function run in the background.
-    processApplicationInBackground(fields, files);
-
-    // Return an immediate response to the user.
-    return NextResponse.json({ message: 'Application submitted successfully!' }, { status: 200 });
-
-  } catch (error) {
-    console.error('Error in API route:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return NextResponse.json({ message: 'Error submitting application', error: errorMessage }, { status: 500 });
-  }
 }

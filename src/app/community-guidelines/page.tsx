@@ -178,7 +178,7 @@ const CommunityGuidelines = () => {
             Immediately report anomalies through our encrypted disclosure channel
           </p>
           <a
-            href="mailto:security@cognitoai.io"
+            href="mailto:security@trainova.io"
             className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
           >
             <FaEnvelope />

@@ -180,7 +180,7 @@ const WorkLocationPolicy = () => {
             For residency confirmation or jurisdiction inquiries
           </p>
           <a
-            href="mailto:compliance@cognitoai.io"
+            href="mailto:compliance@trainova.io"
             className="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
           >
             <FaEnvelope />

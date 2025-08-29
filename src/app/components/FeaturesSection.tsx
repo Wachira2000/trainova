@@ -33,7 +33,7 @@ const FeaturesSection = () => {
   const MotionLink = motion(Link);
 
   return (
-    <section className="relative py-20 bg-gray-900/50 border-t border-gray-800">
+    <section className="relative py-20 bg-black border-t border-gray-800">
       {/* Grid background */}
       <div className="absolute inset-0 opacity-10 bg-[url('/grid.svg')] bg-center" />
       
@@ -46,7 +46,7 @@ const FeaturesSection = () => {
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
             Transform Your Knowledge
-            <span className="block text-2xl text-zinc-400 mt-4">
+            <span className="block text-2xl text-gray-400 mt-4">
               into AI Innovation
             </span>
           </h2>
@@ -60,16 +60,16 @@ const FeaturesSection = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ delay: index * 0.2 }}
-              className="group relative bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
-            >
+                            className="group relative bg-black backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-gray-400 transition-all">
+            
               {/* Gradient icon */}
-              <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-br ${feature.color} p-3 rounded-full`}>
-                <feature.icon className="h-8 w-8 text-white" />
+              <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-white p-3 rounded-full`}>
+                <feature.icon className="h-8 w-8 text-black" />
               </div>
 
               <div className="space-y-6 mt-12">
                 <h3 className="text-2xl font-bold text-white">{feature.title}</h3>
-                <p className="text-zinc-300">{feature.description}</p>
+                <p className="text-gray-400">{feature.description}</p>
                 
                 <div className="bg-gray-900/50 p-4 rounded-xl">
                   <motion.div
@@ -78,7 +78,7 @@ const FeaturesSection = () => {
                     className="flex items-center justify-center gap-2"
                   >
                     <FaCoins className="text-yellow-400" />
-                    <span className="text-lg font-semibold text-cyan-400">
+                    <span className="text-lg font-semibold text-white">
                       {feature.stats}
                     </span>
                   </motion.div>
@@ -86,7 +86,7 @@ const FeaturesSection = () => {
               </div>
 
               {/* Hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+              <div className="absolute inset-0 bg-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
             </motion.div>
           ))}
         </div>
@@ -98,12 +98,12 @@ const FeaturesSection = () => {
           className="mt-20 text-center"
         >
           <div className="inline-block relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-1000" />
+            <div className="absolute -inset-1 bg-white rounded-xl blur opacity-30 group-hover:opacity-50 transition duration-1000" />
             <MotionLink
               href="/opportunities"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="relative bg-gradient-to-br from-cyan-500 to-blue-600 text-white px-12 py-4 rounded-xl text-xl font-semibold flex items-center gap-3"
+              className="relative bg-white text-black px-12 py-4 rounded-xl text-xl font-semibold flex items-center gap-3"
             >
               <FaHandshake className="text-2xl" />
               Start Earning Now

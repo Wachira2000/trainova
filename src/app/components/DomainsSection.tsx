@@ -33,14 +33,14 @@ const DomainsSection = () => {
   }, []);
 
   return (
-    <section className="relative py-20 bg-gray-900 border-t border-gray-800 overflow-hidden">
+    <section className="relative py-20 bg-black border-t border-gray-800 overflow-hidden">
       {/* Conditional particle rendering */}
       <div className="absolute inset-0 opacity-10">
         {isMounted &&
           [...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute bg-cyan-500 rounded-full"
+              className="absolute bg-white rounded-full"
               style={{
                 width: Math.random() * 10 + 5 + 'px',
                 height: Math.random() * 10 + 5 + 'px',
@@ -73,7 +73,7 @@ const DomainsSection = () => {
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
             Join a Community of Innovators
           </h2>
-          <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Our AI trainers come from all backgrounds and have expertise in everything from coding to creative writing.
           </p>
         </motion.div>
@@ -89,11 +89,11 @@ const DomainsSection = () => {
                 transition={{ delay: index * 0.1 }}
                 className="h-full"
               >
-                <div className={`bg-gradient-to-br ${category.color} p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
-                  <div className="bg-gray-900 rounded-xl p-6 h-full">
+                <div className={`bg-gray-900 p-1 rounded-2xl transition-all duration-300 group-hover:scale-105`}>
+                  <div className="bg-black rounded-xl p-6 h-full">
                     <category.icon className="h-12 w-12 text-white mb-4" />
                     <h3 className="text-xl font-bold text-white mb-2">{category.title}</h3>
-                    <div className="inline-flex items-center text-cyan-400 transition-colors">
+                    <div className="inline-flex items-center text-white transition-colors">
                       Learn more
                       <span className="ml-2">→</span>
                     </div>
@@ -110,17 +110,17 @@ const DomainsSection = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             whileHover={{ scale: 1.01 }}
-            className="bg-gradient-to-br from-cyan-500/50 to-blue-600/50 p-1 rounded-2xl cursor-pointer group"
+            className="bg-black p-1 rounded-2xl cursor-pointer group"
           >
-            <div className="bg-gray-900 rounded-xl p-8 text-center">
-              <FaPlusCircle className="h-12 w-12 text-cyan-400 mx-auto mb-4" />
+            <div className="bg-black rounded-xl p-8 text-center">
+              <FaPlusCircle className="h-12 w-12 text-white mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-white mb-4">
                 And 20+ Other Expert Domains
               </h3>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-lg transition-transform"
+                className="inline-flex items-center bg-white text-black px-8 py-3 rounded-lg transition-transform"
               >
                 Discover All Opportunities
                 <span className="ml-2">→</span>

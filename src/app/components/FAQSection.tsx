@@ -11,11 +11,11 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      category: 'About Cognito AI',
+      category: 'About Trainova',
       items: [
         {
-          question: 'What is Cognito AI?',
-          answer: `Cognito AI is where your specialized knowledge meets the frontier of AI. We connect experts like you to architect the next generation of Generative AI through diverse projects, whether it's generating vital training data from your field or scrutinizing the sophisticated performance of these advanced models.`
+          question: 'What is Trainova?',
+          answer: `Trainova is where your specialized knowledge meets the frontier of AI. We connect experts like you to architect the next generation of Generative AI through diverse projects, whether it's generating vital training data from your field or scrutinizing the sophisticated performance of these advanced models.`
         }
       ]
     },
@@ -48,7 +48,7 @@ const FAQSection = () => {
             href="https://www.udemy.com/certificate-link"  // Replace with actual URL
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 underline"
+            className="text-foreground hover:underline"
           >
             Certificate in AI Data Trainer from Udemy
           </a>{' '}
@@ -92,24 +92,24 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-900 border-t border-gray-800">
+    <section className="py-20 bg-background border-t border-gray-200 dark:border-gray-800">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-bold text-white mb-12 text-center">FAQs</h2>
+        <h2 className="text-4xl font-bold text-foreground mb-12 text-center">FAQs</h2>
 
         <div className="space-y-6">
           {faqs.map((section, sectionIndex) => (
-            <div key={section.category} className="border-b border-gray-700">
+            <div key={section.category} className="border-b border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => toggleFAQ(section.category, sectionIndex)}
                 className="w-full flex justify-between items-center py-6 text-left cursor-pointer"
               >
-                <span className="text-xl font-semibold text-cyan-400">
+                <span className="text-xl font-semibold text-foreground">
                   0{sectionIndex + 1} — {section.category}
                 </span>
                 {visibleCategory === section.category ? (
-                  <FiChevronUp className="text-gray-400 text-xl" />
+                  <FiChevronUp className="text-gray-500 dark:text-gray-400 text-xl" />
                 ) : (
-                  <FiChevronDown className="text-gray-400 text-xl" />
+                  <FiChevronDown className="text-gray-500 dark:text-gray-400 text-xl" />
                 )}
               </button>
 
@@ -123,9 +123,9 @@ const FAQSection = () => {
               >
                 <div className="pb-6 space-y-4">
                   {section.items.map((item, itemIndex) => (
-                    <div key={item.question} className="ml-6 border-l-2 border-cyan-400/30 pl-4">
-                      <h3 className="text-lg font-medium text-white">{item.question}</h3>
-                      <p className="mt-2 text-zinc-300">{item.answer}</p>
+                    <div key={item.question} className="ml-6 border-l-2 border-gray-400 dark:border-gray-600 pl-4">
+                      <h3 className="text-lg font-medium text-foreground">{item.question}</h3>
+                      <p className="mt-2 text-gray-500 dark:text-zinc-300">{item.answer}</p>
                     </div>
                   ))}
                 </div>
@@ -137,7 +137,7 @@ const FAQSection = () => {
         <div className="mt-12 text-center">
           <Link
             href="/faq"
-            className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
+            className="inline-flex items-center text-foreground hover:underline transition-colors"
           >
             See All FAQs
             <FiChevronDown className="ml-2 transform rotate-90" />
