@@ -62,8 +62,6 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [fileNames, setFileNames] = useState({
     resume: '',
     certificateFile: '',
@@ -98,42 +96,75 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
-    setSuccess(false);
-
-    const data = new FormData();
-    data.append('jobTitle', jobTitle);
-    for (const key in formData) {
-      const value = formData[key as keyof typeof formData];
-      if (value instanceof File) {
-        data.append(key, value);
-      } else {
-        data.append(key, String(value));
-      }
-    }
 
     try {
-      await axios.post('/api/apply', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      // Step 1: Get signed URLs and upload files
+      const fileFields: (keyof typeof formData)[] = ['resume', 'certificateFile', 'computerSpecs', 'internetSpeedScreenshot'];
+      const filepaths: { [key: string]: string } = {};
+
+      for (const field of fileFields) {
+        const file = formData[field];
+        if (file instanceof File) {
+          try {
+            // Get signed URL from your API
+            const signedUrlResponse = await axios.post('/api/storage/signed-url', {
+              fileName: file.name,
+              fileType: file.type,
+            });
+
+            const { signedUrl, path } = signedUrlResponse.data;
+
+            // Upload file to signed URL
+            await axios.put(signedUrl, file, {
+              headers: { 'Content-Type': file.type },
+            });
+
+            filepaths[field] = path;
+
+          } catch (error) {
+            console.error(`Error uploading ${field}:`, error);
+            throw new Error(`Failed to upload ${file.name}. Please try again.`);
+          }
+        }
+      }
+
+      // Step 2: Store form data (without files) and filepaths in localStorage
+      const dataToStore: any = {};
+      for (const key in formData) {
+          if (!(formData[key as keyof typeof formData] instanceof File)) {
+              dataToStore[key] = formData[key as keyof typeof formData];
+          }
+      }
+      
+      localStorage.setItem('applicationData', JSON.stringify({
+          jobTitle,
+          formData: dataToStore,
+          filepaths,
+      }));
+
+      // Step 3: Initialize Paystack payment
+      const paystackResponse = await axios.post('/api/paystack', {
+          email: formData.email,
+          amount: 500, // 500 KES
       });
-      setSuccess(true);
-      setShowConfetti(true);
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', resume: null, certificateName: '', issuingOrganization: '', certificateNo: '', certificateUrl: '', certificateFile: null, educationLevel: '', country: '', state: '', availability: '', computerSpecs: null, internetSpeedScreenshot: null, languages: '', weeklyHours: '', privacyPolicy: false });
-      setFileNames({ resume: '', certificateFile: '', computerSpecs: '', internetSpeedScreenshot: '' });
+
+      // Step 4: Redirect to Paystack
+      if (paystackResponse.data.authorization_url) {
+          window.location.href = paystackResponse.data.authorization_url;
+      } else {
+          setError('Could not initialize payment.');
+          setSubmitting(false);
+      }
+
     } catch (err) {
-      setError('Something went wrong. Please try again.');
-    } finally {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
       setSubmitting(false);
     }
   };
-
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setShowConfetti(false), 10000); // Confetti lasts for 10 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
 
   const FileInput = ({ name, label, required, accept }: { name: keyof typeof fileNames, label: string, required: boolean, accept: string }) => (
     <div>
@@ -154,38 +185,12 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
           onChange={handleFileChange}
           required={required}
           accept={accept}
-          className="w-full text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-900/50 file:text-cyan-300 hover:file:bg-cyan-800/50 file:cursor-pointer"
+          className="w-full text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-800/50 file:text-white hover:file:bg-gray-700/50 file:cursor-pointer"
         />
       )}
       <p className="mt-1 text-xs text-zinc-500">Accepted file types: {accept}.</p>
     </div>
   );
-
-  if (success) {
-    return (
-        <div className="h-full flex items-center justify-center text-center p-8">
-            <div>
-                {showConfetti && <Confetti />}
-                <motion.div
-                    initial={{ scale: 0, rotate: -90 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{
-                        type: 'spring',
-                        stiffness: 260,
-                        damping: 20,
-                    }}
-                    className="flex justify-center mb-4"
-                >
-                    <FaThumbsUp className="text-6xl text-green-400" />
-                </motion.div>
-                <h1 className="text-3xl font-bold text-center mb-4 text-white">Thank You!</h1>
-                <div className="bg-green-900/50 border border-green-400 text-green-300 p-4 rounded-lg mb-4">
-                    Application submitted successfully!
-                </div>
-            </div>
-        </div>
-    );
-  }
 
   return (
     <div className="p-8">
@@ -281,17 +286,8 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                     <label htmlFor="issuingOrganization" className="block text-sm font-medium text-zinc-300">
                         Issuing Organization <span className="text-red-500">*</span>
                     </label>
-                    <select
-                        name="issuingOrganization"
-                        id="issuingOrganization"
-                        value={formData.issuingOrganization}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
-                    >
-                        <option value="">Select an organization</option>
-                        <option value="Udemy">Udemy</option>
-                        <option value="Skillshare">Skillshare</option>
+                    <select>
+                        <option value="">Test</option>
                     </select>
                 </div>
                 <div>
@@ -398,12 +394,12 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                 <div className="mt-1 text-xs text-zinc-500 space-y-2">
                     <p className="font-semibold">Windows Instructions:</p>
                     <ol className="list-decimal list-inside pl-2">
-                        <li>Search for and navigate to "About Your PC".</li>
+                        <li>Search for and navigate to &quot;About Your PC&quot;.</li>
                         <li>Take a full, unedited screenshot showing Device Name, Processor, RAM, etc.</li>
                     </ol>
                     <p className="font-semibold">Mac Instructions:</p>
                     <ol className="list-decimal list-inside pl-2">
-                        <li>Navigate to "About This Mac".</li>
+                        <li>Navigate to &quot;About This Mac&quot;.</li>
                         <li>Take a full, unedited screenshot showing model, processor, memory, serial number, and macOS version.</li>
                     </ol>
                     <p className="font-bold text-red-400">NOTE: Edited or cropped screenshots will not be accepted.</p>
@@ -411,7 +407,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                 <FileInput name="internetSpeedScreenshot" label="Internet Speed Screenshot" required={true} accept=".pdf,.doc,.jpg,.jpeg,.png" />
                 <div className="mt-1 text-xs text-zinc-500 space-y-2">
                     <ol className="list-decimal list-inside pl-2">
-                        <li>Navigate to <a href="https://www.speedtest.net/" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">speedtest.net</a>.</li>
+                        <li>Navigate to <a href="https://www.speedtest.net/" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">speedtest.net</a>.</li>
                         <li>Click "GO" and wait for the test to complete.</li>
                         <li>Take a full, unedited screenshot of the results.</li>
                     </ol>
@@ -419,7 +415,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                 </div>
                 <div>
                     <label htmlFor="languages" className="block text-sm font-medium text-zinc-300">
-                        List all languages you're proficient in <span className="text-red-500">*</span>
+                        List all languages you&apos;re proficient in <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -456,7 +452,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         className="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-500 rounded bg-gray-800"
                     />
                     <label htmlFor="privacyPolicy" className="ml-2 block text-sm text-zinc-300">
-                        I acknowledge that I've read and agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Privacy Policy</a>. <span className="text-red-500">*</span>
+                        I acknowledge that I've read and agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Privacy Policy</a>. <span className="text-red-500">*</span>
                     </label>
                 </div>
             </div>
@@ -465,7 +461,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 cursor-pointer"
+                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 cursor-pointer"
                 >
                     {submitting ? 'Submitting...' : 'Submit Application'}
                 </button>
@@ -475,6 +471,44 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
   );
 };
 
+const SuccessMessageComponent = () => {
+    const [showConfetti, setShowConfetti] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setShowConfetti(false), 10000); // Confetti lasts for 10 seconds
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div className="min-h-screen bg-black flex flex-col items-center justify-center text-center p-8">
+            <div className="max-w-md">
+                {showConfetti && <Confetti />}
+                <motion.div
+                    initial={{ scale: 0, rotate: -90 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                        type: 'spring',
+                        stiffness: 260,
+                        damping: 20,
+                    }}
+                    className="flex justify-center mb-4"
+                >
+                    <FaThumbsUp className="text-6xl text-green-400" />
+                </motion.div>
+                <h1 className="text-3xl font-bold text-center mb-4 text-white">Thank You!</h1>
+                <div className="bg-green-900/50 border border-green-400 text-green-300 p-4 rounded-lg mb-8">
+                    Application submitted successfully!
+                </div>
+                <a
+                    href="/opportunities"
+                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                >
+                    Back to Opportunities
+                </a>
+            </div>
+        </div>
+    );
+};
 
 const OpportunitiesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -483,8 +517,59 @@ const OpportunitiesPage = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    const submitFinalApplication = async (paymentReference: string) => {
+        setIsProcessingPayment(true);
+        const storedData = localStorage.getItem('applicationData');
+        if (storedData) {
+            const { jobTitle, formData, filepaths } = JSON.parse(storedData);
+            
+            const finalData = {
+                ...formData,
+                jobTitle,
+                paymentReference,
+                filepaths,
+            };
+
+            try {
+                await axios.post('/api/apply', finalData);
+                localStorage.removeItem('applicationData');
+                setShowSuccess(true);
+            } catch (err) {
+                setError('Failed to submit application. Please contact support.');
+                localStorage.removeItem('applicationData'); // Clear data on failure
+            } finally {
+                setIsProcessingPayment(false);
+            }
+        }
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentReference = urlParams.get('reference');
+    const status = urlParams.get('status');
+
+    if (paymentReference) {
+        submitFinalApplication(paymentReference);
+    } else if (status === 'success') {
+        setShowSuccess(true);
+        window.history.replaceState(null, '', '/opportunities');
+    }
+  }, [isClient]);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const fetchJobs = async () => {
       try {
         const { data, error } = await supabase
@@ -545,7 +630,7 @@ const OpportunitiesPage = () => {
     };
 
     fetchJobs();
-  }, []);
+  }, [isClient]);
   
   const handleCloseJobModal = () => {
     setSelectedJob(null);
@@ -557,24 +642,35 @@ const OpportunitiesPage = () => {
     ? jobs.filter((job) => job.category === selectedCategory)
     : jobs;
 
-  if (loading) {
+  if (loading || isSubmitting || isProcessingPayment) {
+    let message = 'Loading opportunities...';
+    if (isProcessingPayment) {
+      message = 'Finalizing your application...';
+    } else if (isSubmitting) {
+      message = 'Submitting...';
+    }
+
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-white text-xl">
-        Loading opportunities...
+      <div className="min-h-screen bg-black flex items-center justify-center text-white text-xl">
+        {message}
       </div>
     );
   }
 
+  if (showSuccess) {
+      return <SuccessMessageComponent />
+  }
+
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-red-400 text-xl max-w-md text-center p-6 bg-gray-800/50 rounded-xl">
           {error}
           <button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg block mx-auto cursor-pointer"
+            onClick={() => window.location.href = '/opportunities'}
+            className="mt-4 bg-white text-black px-4 py-2 rounded-lg block mx-auto cursor-pointer"
           >
-            Retry
+            Go back
           </button>
         </div>
       </div>
@@ -582,7 +678,7 @@ const OpportunitiesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -606,7 +702,7 @@ const OpportunitiesPage = () => {
             onClick={() => setSelectedCategory(null)}
             className={`px-6 py-2 rounded-full cursor-pointer ${
               !selectedCategory
-                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                ? 'bg-white text-black'
                 : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
             }`}
           >
@@ -618,7 +714,7 @@ const OpportunitiesPage = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full flex items-center gap-2 cursor-pointer ${
                 selectedCategory === category
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  ? 'bg-white text-black'
                   : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
               }`}
             >
@@ -658,10 +754,9 @@ const OpportunitiesPage = () => {
                 </div>
                 <button
                   onClick={() => setSelectedJob(job)}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                  className="bg-white text-black px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
                 >
                   Apply Now
-                  <FaCode className="text-sm" />
                 </button>
               </div>
             </motion.div>
@@ -695,7 +790,7 @@ const OpportunitiesPage = () => {
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">About Cognito AI</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">About Trainova</h3>
                   <p className="text-zinc-300 leading-relaxed whitespace-pre-line">
                     {selectedJob.about_cognito_ai}
                   </p>
@@ -762,37 +857,16 @@ const OpportunitiesPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-6">
-                  <h3 className="text-lg font-bold text-white mb-4">📝 What to Expect</h3>
-                  <div className="hidden md:flex items-center justify-between">
-                    {[{ icon: FaFileAlt, text: 'Fill in your application' }, { icon: FaCheckCircle, text: 'Verify your details and certification' }, { icon: FaClipboardList, text: 'Pass a skills assessment or interview' }, { icon: FaRocket, text: 'Start working and earning!' }].map((step, index) => (
-                      <div key={index} className="flex items-center">
-                        <div className="flex flex-col items-center">
-                          <div className="bg-gradient-to-r from-cyan-500 to-blue-600/20 p-3 rounded-full mb-2">
-                            <step.icon className="h-6 w-6 text-cyan-400" />
-                          </div>
-                          <p className="text-white font-medium text-center max-w-[120px]">{step.text}</p>
-                        </div>
-                        {index < 3 && (
-                          <div className="mx-2">
-                            <FaArrowRight className="h-5 w-5 text-cyan-400 mx-4" />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
                   <div className="md:hidden">
                     {[{ icon: FaFileAlt, text: 'Fill in your application' }, { icon: FaCheckCircle, text: 'Verify your details and certification' }, { icon: FaClipboardList, text: 'Pass a skills assessment or interview' }, { icon: FaRocket, text: 'Start working and earning!' }].map((step, index) => (
                       <div key={index} className="flex">
                         <div className="flex flex-col items-center mr-4">
-                          <div className="bg-gradient-to-r from-cyan-500 to-blue-600/20 p-3 rounded-full mb-2">
-                            <step.icon className="h-6 w-6 text-cyan-400" />
+                          <div className="bg-gray-800/20 p-3 rounded-full mb-2">
+                            <step.icon className="h-6 w-6 text-white" />
                           </div>
                           {index < 3 && (
                             <div className="flex-grow">
-                              <FaArrowDown className="h-5 w-5 text-cyan-400 my-1" />
+                              <FaArrowDown className="h-5 w-5 text-white my-1" />
                             </div>
                           )}
                         </div>
@@ -807,9 +881,8 @@ const OpportunitiesPage = () => {
 
               <div className="mt-8 flex justify-end gap-4">
                 <button onClick={handleCloseJobModal} className="px-4 py-2 text-zinc-300 hover:text-white transition-colors cursor-pointer">Close</button>
-                <button onClick={() => setShowApplicationForm(true)} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
+                <button onClick={() => setShowApplicationForm(true)} className="bg-white text-black px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
                   Continue to Application
-                  <FaCode className="text-sm" />
                 </button>
               </div>
             </motion.div>
@@ -847,12 +920,12 @@ const OpportunitiesPage = () => {
         )}
 
         <motion.div initial={{ scale: 0.9 }} whileInView={{ scale: 1 }} className="mt-20 text-center">
-          <div className="bg-gray-800/30 p-8 rounded-2xl border border-cyan-400/20">
+          <div className="bg-gray-800/30 p-8 rounded-2xl border border-gray-400/20">
             <h2 className="text-3xl font-bold text-white mb-4">Not Seeing Your Expertise?</h2>
             <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
-              We're constantly expanding our domains. Join our talent network to be notified of new opportunities matching your skills.
+              We&apos;re constantly expanding our domains. Join our talent network to be notified of new opportunities matching your skills.
             </p>
-            <a href="mailto:talent@cognitoai.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer">
+            <a href="mailto:talent@trainova.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer">
               Join Talent Network
             </a>
           </div>
