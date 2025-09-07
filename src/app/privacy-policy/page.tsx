@@ -41,7 +41,7 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-20">
         {/* Hero Section */}
         <motion.div
@@ -49,11 +49,9 @@ const PrivacyPolicy = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-cyan-500 text-transparent bg-clip-text">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-              Privacy Protocol
-            </h1>
-          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 text-white">
+            Privacy Protocol
+          </h1>
           <p className="text-xl text-zinc-300">
             Effective: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -123,7 +121,7 @@ const PrivacyPolicy = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-purple-400/20 hover:border-cyan-400 transition-all"
+              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
             >
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-3 bg-cyan-500/20 rounded-lg">
@@ -192,7 +190,7 @@ const PrivacyPolicy = () => {
           {complianceFrameworks.map((framework, index) => (
             <div 
               key={index}
-              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-purple-400/20 flex items-center gap-4"
+              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 flex items-center gap-4"
             >
               <div className="p-3 bg-cyan-500/20 rounded-lg">
                 <framework.icon className="h-6 w-6 text-cyan-400" />
@@ -218,7 +216,7 @@ const PrivacyPolicy = () => {
           <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
             Initiate GDPR Article 17 erasure requests through our zero-knowledge verification system
           </p>
-          <button className="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform">
+          <button className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform">
             Request Data Deletion
           </button>
         </motion.div>

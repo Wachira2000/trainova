@@ -19,7 +19,7 @@ const BlogPage = () => {
         <p class="text-zinc-300 mb-6">Modern AI development has shifted from pure automation to <em>cognitive partnership</em>. Our latest architectures employ <strong>Reinforcement Learning with Human Feedback (RLHF)</strong> frameworks where:</p>
         
         <div class="bg-gray-800/30 p-6 rounded-xl mb-6">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-3">Core Innovations</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-3">Core Innovations</h3>
           <ul class="list-disc pl-6 space-y-2 text-zinc-300">
             <li>Expert-annotated real-time performance metrics</li>
             <li>Biologically-inspired parameter adaptation algorithms</li>
@@ -28,15 +28,15 @@ const BlogPage = () => {
         </div>
 
         <div class="bg-gray-800/30 p-6 rounded-xl mb-6">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-3">Autonomous Vehicle Case Study</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-3">Autonomous Vehicle Case Study</h3>
           <p class="text-zinc-300 mb-4">Implementing <strong>neuro-symbolic programming</strong> resulted in:</p>
           <div class="grid grid-cols-2 gap-4">
             <div class="p-4 bg-gray-900/50 rounded-lg">
-              <p class="text-cyan-400">38%</p>
+              <p class="text-gray-400">38%</p>
               <p class="text-sm text-zinc-300">Reduction in edge-case errors</p>
             </div>
             <div class="p-4 bg-gray-900/50 rounded-lg">
-              <p class="text-cyan-400">92%</p>
+              <p class="text-gray-400">92%</p>
               <p class="text-sm text-zinc-300">Faster model convergence</p>
             </div>
           </div>
@@ -66,7 +66,7 @@ class EthicalValidator:
         </div>
 
         <div class="bg-gray-800/30 p-6 rounded-xl mb-6">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-4">Performance Metrics</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-4">Performance Metrics</h3>
           <table class="w-full text-zinc-300">
             <thead>
               <tr class="border-b border-gray-700">
@@ -103,7 +103,7 @@ class EthicalValidator:
         <p class="text-zinc-300 mb-6">Our platform revolutionizes cross-cultural communication through:</p>
 
         <div class="bg-gray-800/30 p-6 rounded-xl mb-6">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-3">Technical Breakthroughs</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-3">Technical Breakthroughs</h3>
           <ul class="list-disc pl-6 space-y-2 text-zinc-300">
             <li>Temporal Attention Networks processing speech prosody</li>
             <li>152D cultural context embeddings</li>
@@ -112,7 +112,7 @@ class EthicalValidator:
         </div>
 
         <div class="bg-gray-800/30 p-6 rounded-xl">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-3">Translation Engine</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-3">Translation Engine</h3>
           <pre class="text-zinc-300 text-sm">
             <code>
 fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
@@ -138,29 +138,29 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
         <div class="bg-gray-800/30 p-6 rounded-xl mb-6">
           <div class="grid md:grid-cols-3 gap-4">
             <div class="p-4 bg-gray-900/50 rounded-lg">
-              <h3 class="text-cyan-400 mb-2">Neural Task Allocation</h3>
+              <h3 class="text-gray-400 mb-2">Neural Task Allocation</h3>
               <p class="text-sm text-zinc-300">Real-time human-machine task optimization</p>
             </div>
             <div class="p-4 bg-gray-900/50 rounded-lg">
-              <h3 class="text-cyan-400 mb-2">Cognitive Load Balancing</h3>
+              <h3 class="text-gray-400 mb-2">Cognitive Load Balancing</h3>
               <p class="text-sm text-zinc-300">Voice pattern stress analysis</p>
             </div>
             <div class="p-4 bg-gray-900/50 rounded-lg">
-              <h3 class="text-cyan-400 mb-2">Hybrid Decision Trees</h3>
+              <h3 class="text-gray-400 mb-2">Hybrid Decision Trees</h3>
               <p class="text-sm text-zinc-300">ML predictions + human values</p>
             </div>
           </div>
         </div>
 
         <div class="bg-gray-800/30 p-6 rounded-xl">
-          <h3 class="text-xl font-semibold text-cyan-400 mb-3">Performance Metrics</h3>
+          <h3 class="text-xl font-semibold text-gray-400 mb-3">Performance Metrics</h3>
           <div class="flex gap-6">
             <div class="flex-1 p-4 bg-gray-900/50 rounded-lg">
-              <p class="text-3xl font-bold text-cyan-400">142%</p>
+              <p class="text-3xl font-bold text-gray-400">142%</p>
               <p class="text-sm text-zinc-300">Faster project completion</p>
             </div>
             <div class="flex-1 p-4 bg-gray-900/50 rounded-lg">
-              <p class="text-3xl font-bold text-cyan-400">3.2x</p>
+              <p class="text-3xl font-bold text-gray-400">3.2x</p>
               <p class="text-sm text-zinc-300">Innovation improvement</p>
             </div>
           </div>
@@ -171,7 +171,7 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-8 sm:py-12 md:py-16 px-4 xs:px-6 sm:px-8">
+    <div className="min-h-screen bg-black py-8 sm:py-12 md:py-16 px-4 xs:px-6 sm:px-8 pt-40">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
@@ -195,12 +195,12 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ margin: "-100px 0px", once: true }}              className={`bg-gray-800/30 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl border border-gray-700 cursor-pointer ${
-                expandedPost === index ? '!border-cyan-400' : ''
+                expandedPost === index ? '!border-gray-400' : ''
               }`}
             >
               <button
                 onClick={() => setExpandedPost(expandedPost === index ? null : index)}
-                className="w-full text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500"
               >
                 <div className="p-3 xs:p-4 sm:p-5 md:p-6">
                   {/* Metadata Row */}
@@ -259,7 +259,7 @@ fn contextual_translate(input: MultimodalData) -> LocalizedOutput {
         >
           <a
             href="/opportunities"
-            className="inline-block w-full xs:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2.5 xs:px-6 xs:py-3 sm:px-8 sm:py-4 text-sm xs:text-base sm:text-lg font-semibold rounded-md xs:rounded-lg sm:rounded-xl hover:scale-105 transition-transform"
+            className="inline-block w-full xs:w-auto bg-white text-black px-5 py-2.5 xs:px-6 xs:py-3 sm:px-8 sm:py-4 text-sm xs:text-base sm:text-lg font-semibold rounded-md xs:rounded-lg sm:rounded-xl hover:scale-105 transition-transform"
           >
             Explore AI Training Opportunities
             <FiArrowUpRight className="ml-1.5 xs:ml-2 inline-block" />

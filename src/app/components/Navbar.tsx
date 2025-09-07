@@ -35,10 +35,10 @@ const Navbar = () => {
               <MotionLink
                 key={item.name}
                 href={item.path}
-                className={`text-black transition-colors relative ${
+                className={`text-white transition-colors relative ${
                   item.name === 'View Opportunities' 
-                    ? 'bg-white text-black px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold inline-flex items-center gap-2'
-                    : 'hover:text-white'
+                    ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2'
+                    : 'hover:text-gray-300'
                 }`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ const Navbar = () => {
                     href={item.path}
                     className={`block text-gray-400 transition-colors ${
                       item.name === 'View Opportunities'
-                        ? 'bg-white text-black px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl text-base sm:text-lg font-semibold inline-flex items-center gap-2 justify-center'
+                        ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center'
                         : 'hover:text-white'
                     }`}
                     onClick={() => setIsOpen(false)}

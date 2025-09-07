@@ -169,7 +169,7 @@ certificate in AI Data Trainer from Udemy
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black pt-32 pb-20 px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -300,7 +300,7 @@ certificate in AI Data Trainer from Udemy
         viewport={{ once: true, amount: 0.2 }}
         className="max-w-7xl mx-auto mt-20 text-center"
       >
-        <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 p-8 rounded-2xl border border-cyan-500/30"> {/* Added subtle border */}
+        <div className="mt-20 text-center">
           <div className="flex flex-col items-center gap-6">
             <FiMessageSquare className="text-4xl text-cyan-400" />
             <h2 className="text-3xl font-bold text-white">Still Have Questions?</h2>
@@ -312,7 +312,7 @@ certificate in AI Data Trainer from Udemy
                 href="mailto:onboarding@trainova.io"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-cyan-600/90 transition-colors duration-300 shadow-lg hover:shadow-cyan-500/50" // Added shadow
+                className="inline-block bg-white text-black px-6 py-3 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform"
               >
                 <FiMail className="inline-block" /> Email Support
               </a>

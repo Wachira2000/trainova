@@ -76,7 +76,7 @@ const CookiesPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <ClientOnly>
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           {cookiePositions.map((pos, i) => (
@@ -110,11 +110,11 @@ const CookiesPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <div className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 p-2 rounded-2xl mb-8">
+          <div className="inline-block bg-gray-800 p-2 rounded-2xl mb-8">
             <FaCookieBite className="h-16 w-16 text-white" />
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Cookie <span className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">Policy</span>
+            Cookie <span className="text-cyan-400">Policy</span>
           </h1>
           <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
             We believe in transparency. Customize your cookie preferences and learn how we use data to enhance your experience.
@@ -162,9 +162,9 @@ const CookiesPage = () => {
                       className="sr-only"
                       disabled={type.alwaysActive}
                     />
-                    <div className={`w-11 h-6 rounded-full ${type.alwaysActive ? 'bg-cyan-600' : 'bg-gray-700'} transition-colors`}>
+                    <div className={`w-11 h-6 rounded-full ${type.alwaysActive ? 'bg-gray-600' : 'bg-gray-700'} transition-colors`}>
                       <div className={`absolute top-0.5 left-[2px] w-5 h-5 rounded-full transition-transform ${
-                        cookiePreferences[type.key] ? 'translate-x-5 bg-cyan-400' : 'bg-gray-400'
+                        cookiePreferences[type.key] ? 'translate-x-5 bg-white' : 'bg-gray-400'
                       }`} />
                     </div>
                   </label>
@@ -242,7 +242,7 @@ const CookiesPage = () => {
                     <div className="flex gap-4">
                       <button
                         onClick={() => setIsBannerVisible(false)}
-                        className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-lg hover:scale-105 transition-transform"
+                        className="bg-white text-black px-6 py-2 rounded-lg hover:scale-105 transition-transform"
                       >
                         Accept All
                       </button>

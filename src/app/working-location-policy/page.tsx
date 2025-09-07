@@ -25,7 +25,7 @@ const WorkLocationPolicy = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-20">
         {/* Hero Section */}
         <motion.div
@@ -33,11 +33,9 @@ const WorkLocationPolicy = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-cyan-500 text-transparent bg-clip-text">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-              Global Work Protocol
-            </h1>
-          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 text-white">
+            Global Work Protocol
+          </h1>
           <p className="text-xl text-zinc-300">
             Effective: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -45,7 +43,7 @@ const WorkLocationPolicy = () => {
 
         {/* Global Coverage */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-cyan-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ scale: 0.95 }}
           whileInView={{ scale: 1 }}
         >
@@ -61,7 +59,7 @@ const WorkLocationPolicy = () => {
               </p>
             </div>
             <div className="p-6 bg-gray-900 rounded-xl w-full md:w-1/3">
-              <div className="flex items-center gap-3 text-purple-400">
+              <div className="flex items-center gap-3 text-cyan-400">
                 <FaUserClock className="text-2xl" />
                 <span className="text-lg font-bold">24/7 Global Coverage</span>
               </div>
@@ -102,12 +100,12 @@ const WorkLocationPolicy = () => {
 
         {/* Compliance Protocol */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ x: -50 }}
           whileInView={{ x: 0 }}
         >
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <FaShieldAlt className="text-purple-400" />
+            <FaShieldAlt className="text-cyan-400" />
             Location Validation Framework
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-zinc-300">
@@ -138,7 +136,7 @@ const WorkLocationPolicy = () => {
 
         {/* Dynamic Compliance Section */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-cyan-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
         >
@@ -168,12 +166,12 @@ const WorkLocationPolicy = () => {
 
         {/* Contact CTA */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20 text-center"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 text-center"
           initial={{ scale: 0.95 }}
           whileInView={{ scale: 1 }}
         >
           <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-3">
-            <FaPassport className="text-purple-400" />
+            <FaPassport className="text-cyan-400" />
             Location Verification Support
           </h2>
           <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
@@ -181,7 +179,7 @@ const WorkLocationPolicy = () => {
           </p>
           <a
             href="mailto:compliance@trainova.io"
-            className="bg-gradient-to-r from-cyan-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
+            className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
           >
             <FaEnvelope />
             Contact Compliance Team

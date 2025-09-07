@@ -85,7 +85,7 @@ const DataProcessingAddendum = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <ClientOnly>
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           {floatingIcons.map((pos, i) => (
@@ -112,11 +112,11 @@ const DataProcessingAddendum = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <div className="inline-block bg-gradient-to-r from-purple-500 to-blue-600 p-2 rounded-2xl mb-8">
+          <div className="inline-block bg-gray-800 p-2 rounded-2xl mb-8">
             <FaShieldAlt className="h-16 w-16 text-white" />
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Data Processing <span className="bg-gradient-to-r from-purple-400 to-blue-600 bg-clip-text text-transparent">Addendum</span>
+            Data Processing <span className="text-cyan-400">Addendum</span>
           </h1>
           <ClientOnly>
             <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
@@ -163,7 +163,7 @@ const DataProcessingAddendum = () => {
             </div>
             <p className="text-zinc-300 mt-6 max-w-2xl mx-auto">
               Our processing activities maintain <span className="text-cyan-400">SOC 2 Type II</span> certification and 
-              regular <span className="text-purple-400">DPIA assessments</span>. Audit reports available under NDA.
+              regular <span className="text-cyan-400">DPIA assessments</span>. Audit reports available under NDA.
             </p>
           </motion.div>
         </ClientOnly>
@@ -197,7 +197,7 @@ const DataProcessingAddendum = () => {
           whileInView={{ opacity: 1 }}
         >
           <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-            <FaBalanceScale className="text-purple-400" />
+            <FaBalanceScale className="text-cyan-400" />
             Annex I - Technical & Organizational Measures
           </h2>
           

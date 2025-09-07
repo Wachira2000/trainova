@@ -34,7 +34,7 @@ const CommunityGuidelines = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-20">
         {/* Hero Section */}
         <motion.div
@@ -42,11 +42,9 @@ const CommunityGuidelines = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-cyan-500 text-transparent bg-clip-text">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-              Community Covenant
-            </h1>
-          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 text-white">
+            Community Covenant
+          </h1>
           <p className="text-xl text-zinc-300">
             Effective: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -61,7 +59,7 @@ const CommunityGuidelines = () => {
           {corePrinciples.map((principle, index) => (
             <div 
               key={index}
-              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-cyan-400/20 hover:border-purple-400 transition-all"
+              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
             >
               <div className="flex items-center gap-4 mb-4">
                 <div className="p-3 bg-cyan-500/20 rounded-lg">
@@ -76,12 +74,12 @@ const CommunityGuidelines = () => {
 
         {/* Task Integrity Section */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ scale: 0.95 }}
           whileInView={{ scale: 1 }}
         >
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <FaCode className="text-purple-400" />
+            <FaCode className="text-cyan-400" />
             Champion Authentic Work
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -114,7 +112,7 @@ const CommunityGuidelines = () => {
 
         {/* Data Sanctity Section */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-cyan-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
         >
@@ -144,12 +142,12 @@ const CommunityGuidelines = () => {
 
         {/* Compliance Section */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
           initial={{ x: -50 }}
           whileInView={{ x: 0 }}
         >
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <FaGlobeAmericas className="text-purple-400" />
+            <FaGlobeAmericas className="text-cyan-400" />
             Global Participation Framework
           </h2>
           <div className="text-zinc-300 space-y-4">
@@ -166,7 +164,7 @@ const CommunityGuidelines = () => {
 
         {/* Reporting Section */}
         <motion.div
-          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-cyan-400/20 text-center"
+          className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 text-center"
           initial={{ scale: 0.95 }}
           whileInView={{ scale: 1 }}
         >
@@ -179,7 +177,7 @@ const CommunityGuidelines = () => {
           </p>
           <a
             href="mailto:security@trainova.io"
-            className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
+            className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
           >
             <FaEnvelope />
             Report Incident

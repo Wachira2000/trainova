@@ -168,14 +168,14 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
 
   const FileInput = ({ name, label, required, accept }: { name: keyof typeof fileNames, label: string, required: boolean, accept: string }) => (
     <div>
-      <label className="block text-sm font-medium text-zinc-300">
+      <label className="block text-sm font-medium text-zinc-100">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {fileNames[name] ? (
         <div className="mt-1 flex items-center">
           <span className="text-green-400">✓</span>
           <span className="ml-2 text-white">{fileNames[name]}</span>
-          <button type="button" onClick={() => handleRemoveFile(name)} className="ml-4 text-red-400 hover:text-red-500">Remove</button>
+          <button type="button" onClick={() => handleRemoveFile(name)} className="ml-4 text-red-400 hover:text-red-600">Remove</button>
         </div>
       ) : (
         <input
@@ -185,7 +185,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
           onChange={handleFileChange}
           required={required}
           accept={accept}
-          className="w-full text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-800/50 file:text-white hover:file:bg-gray-700/50 file:cursor-pointer"
+          className="w-full text-zinc-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-900/50 file:text-white hover:file:bg-gray-800/50 file:cursor-pointer"
         />
       )}
       <p className="mt-1 text-xs text-zinc-500">Accepted file types: {accept}.</p>
@@ -198,14 +198,14 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
             Please ensure all required fields marked with a red asterisk (<span className="text-red-500">*</span>) are completed. Missing or incomplete information may delay your application.
         </p>
         {error && (
-            <div className="bg-red-900/50 border border-red-400 text-red-300 p-4 rounded-lg mb-6">
+            <div className="bg-red-900/50 border border-red-400 text-red-200 p-4 rounded-lg mb-6">
                 {error}
             </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-zinc-100">
                         First Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -215,11 +215,11 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.firstName}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-zinc-100">
                         Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -229,12 +229,12 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.lastName}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
             </div>
             <div>
-                <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
+                <label htmlFor="email" className="block text-sm font-medium text-zinc-100">
                     Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -244,11 +244,11 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                 />
             </div>
             <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-zinc-300">
+                <label htmlFor="phone" className="block text-sm font-medium text-zinc-100">
                     Phone
                 </label>
                 <input
@@ -257,19 +257,19 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                     id="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                    className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                 />
             </div>
             <FileInput name="resume" label="Upload Resume" required={true} accept=".pdf,.doc,.docx" />
 
             <div className="space-y-6 pt-6 border-t border-gray-700">
                 <h2 className="text-2xl font-bold text-white">Education & Qualifications</h2>
-                <p className="text-lg font-medium text-zinc-300">Add your AI Annotation certificate</p>
+                <p className="text-lg font-medium text-zinc-100">Add your AI Annotation certificate</p>
                 <p className="text-sm text-zinc-400">
-                    Please upload a valid certificate from <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Udemy</a> or <a href="https://www.skillshare.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Skillshare</a>. Certificates that cannot be verified will not be accepted.
+                    Please upload a valid certificate from <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Udemy</a> or <a href="https://www.skillshare.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Skillshare</a>. Certificates that cannot be verified will not be accepted.
                 </p>
                 <div>
-                    <label htmlFor="certificateName" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="certificateName" className="block text-sm font-medium text-zinc-100">
                         Certificate Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -279,19 +279,29 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.certificateName}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="issuingOrganization" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="issuingOrganization" className="block text-sm font-medium text-zinc-100">
                         Issuing Organization <span className="text-red-500">*</span>
                     </label>
-                    <select>
-                        <option value="">Test</option>
+                    <select
+                        name="issuingOrganization"
+                        id="issuingOrganization"
+                        value={formData.issuingOrganization}
+                        onChange={handleChange}
+                        required
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+                    >
+                        <option value="">Select an organization</option>
+                        <option value="Udemy">Udemy</option>
+                        <option value="Skillshare">Skillshare</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="certificateNo" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="certificateNo" className="block text-sm font-medium text-zinc-100">
                         Certificate No. <span className="text-red-500">*</span> <span className="text-zinc-500 text-xs">(Input the unique certificate number.)</span>
                     </label>
                     <input
@@ -301,11 +311,11 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.certificateNo}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="certificateUrl" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="certificateUrl" className="block text-sm font-medium text-zinc-100">
                         Certificate URL <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -315,13 +325,13 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.certificateUrl}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                         placeholder="https://www.example.com/certificate/123"
                     />
                 </div>
                 <FileInput name="certificateFile" label="Certificate File" required={true} accept=".pdf,.jpg,.jpeg,.png" />
                 <div>
-                    <label htmlFor="educationLevel" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="educationLevel" className="block text-sm font-medium text-zinc-100">
                         Highest level of education completed <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -330,7 +340,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.educationLevel}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     >
                         <option value="">Select level</option>
                         <option value="High School">High School Diploma or GED</option>
@@ -343,7 +353,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="country" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="country" className="block text-sm font-medium text-zinc-100">
                         Country of residence <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -353,11 +363,11 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.country}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="state" className="block text-sm font-medium text-zinc-100">
                         State of residence (if in USA)
                     </label>
                     <input
@@ -366,7 +376,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         id="state"
                         value={formData.state}
                         onChange={handleChange}
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
             </div>
@@ -374,7 +384,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
             <div className="space-y-6 pt-6 border-t border-gray-700">
                 <h2 className="text-2xl font-bold text-white">Availability & Technical Specs</h2>
                 <div>
-                    <label htmlFor="availability" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="availability" className="block text-sm font-medium text-zinc-100">
                         Are you available for up to 40 hours a week? <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -383,7 +393,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.availability}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     >
                         <option value="">Select an option</option>
                         <option value="Yes">Yes</option>
@@ -414,7 +424,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                     <p className="font-bold text-red-400">NOTE: Edited or cropped screenshots will not be accepted.</p>
                 </div>
                 <div>
-                    <label htmlFor="languages" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="languages" className="block text-sm font-medium text-zinc-100">
                         List all languages you&apos;re proficient in <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -424,11 +434,11 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.languages}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div>
-                    <label htmlFor="weeklyHours" className="block text-sm font-medium text-zinc-300">
+                    <label htmlFor="weeklyHours" className="block text-sm font-medium text-zinc-100">
                         On average, how many hours per week are you available? <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -438,7 +448,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         value={formData.weeklyHours}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-cyan-500 focus:border-cyan-500"
+                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
                     />
                 </div>
                 <div className="flex items-center">
@@ -449,9 +459,9 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                         checked={formData.privacyPolicy}
                         onChange={handleChange}
                         required
-                        className="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-500 rounded bg-gray-800"
+                        className="h-4 w-4 text-gray-500 focus:ring-gray-400 border-gray-500 rounded bg-gray-900"
                     />
-                    <label htmlFor="privacyPolicy" className="ml-2 block text-sm text-zinc-300">
+                    <label htmlFor="privacyPolicy" className="ml-2 block text-sm text-zinc-100">
                         I acknowledge that I've read and agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Privacy Policy</a>. <span className="text-red-500">*</span>
                     </label>
                 </div>
@@ -461,7 +471,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
                 <button
                     type="submit"
                     disabled={submitting}
-                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 cursor-pointer"
+                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 cursor-pointer hover:bg-gray-200"
                 >
                     {submitting ? 'Submitting...' : 'Submit Application'}
                 </button>
@@ -493,15 +503,15 @@ const SuccessMessageComponent = () => {
                     }}
                     className="flex justify-center mb-4"
                 >
-                    <FaThumbsUp className="text-6xl text-green-400" />
+                    <FaThumbsUp className="text-6xl text-green-300" />
                 </motion.div>
                 <h1 className="text-3xl font-bold text-center mb-4 text-white">Thank You!</h1>
-                <div className="bg-green-900/50 border border-green-400 text-green-300 p-4 rounded-lg mb-8">
+                <div className="bg-green-900/50 border border-green-400 text-green-200 p-4 rounded-lg mb-8">
                     Application submitted successfully!
                 </div>
                 <a
                     href="/opportunities"
-                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                    className="bg-white text-black font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 cursor-pointer hover:bg-gray-200"
                 >
                     Back to Opportunities
                 </a>
@@ -664,11 +674,11 @@ const OpportunitiesPage = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-red-400 text-xl max-w-md text-center p-6 bg-gray-800/50 rounded-xl">
+        <div className="text-red-300 text-xl max-w-md text-center p-6 bg-gray-900/50 rounded-xl">
           {error}
           <button
             onClick={() => window.location.href = '/opportunities'}
-            className="mt-4 bg-white text-black px-4 py-2 rounded-lg block mx-auto cursor-pointer"
+            className="mt-4 bg-white text-black px-4 py-2 rounded-lg block mx-auto cursor-pointer hover:bg-gray-200"
           >
             Go back
           </button>
@@ -688,7 +698,7 @@ const OpportunitiesPage = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
             AI Training Opportunities
           </h1>
-          <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
+          <p className="text-xl text-zinc-100 max-w-3xl mx-auto">
             Join our global network of experts shaping tomorrow's artificial intelligence
           </p>
         </motion.div>
@@ -703,7 +713,7 @@ const OpportunitiesPage = () => {
             className={`px-6 py-2 rounded-full cursor-pointer ${
               !selectedCategory
                 ? 'bg-white text-black'
-                : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
+                : 'bg-gray-900 text-zinc-100 hover:bg-gray-800'
             }`}
           >
             All Domains
@@ -715,7 +725,7 @@ const OpportunitiesPage = () => {
               className={`px-6 py-2 rounded-full flex items-center gap-2 cursor-pointer ${
                 selectedCategory === category
                   ? 'bg-white text-black'
-                  : 'bg-gray-800 text-zinc-300 hover:bg-gray-700'
+                  : 'bg-gray-900 text-zinc-100 hover:bg-gray-800'
               }`}
             >
               <span>{category}</span>
@@ -730,18 +740,18 @@ const OpportunitiesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-800/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
+              className="bg-gray-900/30 backdrop-blur-sm p-6 rounded-2xl border border-gray-500 hover:border-gray-400 transition-all"
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className="p-3 bg-gradient-to-r from-cyan-500 to-blue-600/20 rounded-lg">
+                <div className="p-3 bg-gradient-to-r from-gray-700 to-gray-800/20 rounded-lg">
                   {React.createElement(job.icon, {
-                    className: 'h-6 w-6 text-cyan-400',
+                    className: 'h-6 w-6 text-gray-300',
                   })}
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">{job.title}</h2>
                   <div className="mt-2">
-                    <span className="text-cyan-400 text-sm bg-cyan-900/30 px-3 py-1 rounded-full">
+                    <span className="text-gray-300 text-sm bg-gray-700/30 px-3 py-1 rounded-full">
                       {job.category}
                     </span>
                   </div>
@@ -749,12 +759,12 @@ const OpportunitiesPage = () => {
               </div>
               <div className="flex justify-between items-center mt-6">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-cyan-300">{job.rate}</p>
-                  <p className="text-sm text-zinc-400">{job.duration}</p>
+                  <p className="text-sm font-medium text-gray-200">{job.rate}</p>
+                  <p className="text-sm text-zinc-100">{job.duration}</p>
                 </div>
                 <button
                   onClick={() => setSelectedJob(job)}
-                  className="bg-white text-black px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                  className="bg-white text-black px-4 py-2 rounded-lg flex items-center gap-2 transition-colors cursor-pointer hover:bg-gray-200"
                 >
                   Apply Now
                 </button>
@@ -773,39 +783,39 @@ const OpportunitiesPage = () => {
             <motion.div
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
-              className="bg-gray-800 max-w-3xl w-full rounded-xl p-8 relative max-h-[90vh] overflow-y-auto"
+              className="bg-gray-900 max-w-3xl w-full rounded-xl p-8 relative max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-r from-cyan-500 to-blue-600/20 rounded-lg">
+                <div className="p-3 bg-gradient-to-r from-gray-700 to-gray-800/20 rounded-lg">
                   {React.createElement(selectedJob.icon, {
-                    className: 'h-6 w-6 text-cyan-400',
+                    className: 'h-6 w-6 text-gray-300',
                   })}
                 </div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">{selectedJob.title}</h2>
-                  <p className="text-cyan-400 mt-1">{selectedJob.category}</p>
+                  <p className="text-gray-300 mt-1">{selectedJob.category}</p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">About Trainova</h3>
-                  <p className="text-zinc-300 leading-relaxed whitespace-pre-line">
+                  <p className="text-zinc-100 leading-relaxed whitespace-pre-line">
                     {selectedJob.about_cognito_ai}
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">About the Role</h3>
-                  <p className="text-zinc-300 leading-relaxed whitespace-pre-line">
+                  <p className="text-zinc-100 leading-relaxed whitespace-pre-line">
                     {selectedJob.about_the_role}
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Responsibilities</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-zinc-300">
+                  <ul className="list-disc pl-6 space-y-2 text-zinc-100">
                     {selectedJob.responsibilities.map((item, i) => (
                       <li key={i} className="leading-relaxed">
                         {item}
@@ -816,7 +826,7 @@ const OpportunitiesPage = () => {
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Qualifications</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-zinc-300">
+                  <ul className="list-disc pl-6 space-y-2 text-zinc-100">
                     {selectedJob.qualifications.map((qual, i) => (
                       <li key={i} className="leading-relaxed">
                         {qual}
@@ -829,28 +839,28 @@ const OpportunitiesPage = () => {
                   <h3 className="text-lg font-bold text-white mb-2">✨ Perks and Benefits</h3>
                   <div className="space-y-3">
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaGlobe className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaGlobe className="text-gray-300 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Remote work</p>
                         <p className="text-zinc-400 text-sm">Work from the comfort of your home</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaClock className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaClock className="text-gray-300 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Flexible hours</p>
                         <p className="text-zinc-400 text-sm">You set your schedule</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaMoneyBillWave className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaMoneyBillWave className="text-gray-300 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Weekly payouts</p>
                         <p className="text-zinc-400 text-sm">Get paid promptly every week</p>
                       </div>
                     </div>
                     <div className="bg-gray-900/40 p-3 rounded-xl flex items-start gap-2">
-                      <FaLightbulb className="text-cyan-400 mt-1 h-4 w-4 flex-shrink-0" />
+                      <FaLightbulb className="text-gray-300 mt-1 h-4 w-4 flex-shrink-0" />
                       <div>
                         <p className="text-white font-semibold">Flex your expertise</p>
                         <p className="text-zinc-400 text-sm">Help shape the future of AI</p>
@@ -861,7 +871,7 @@ const OpportunitiesPage = () => {
                     {[{ icon: FaFileAlt, text: 'Fill in your application' }, { icon: FaCheckCircle, text: 'Verify your details and certification' }, { icon: FaClipboardList, text: 'Pass a skills assessment or interview' }, { icon: FaRocket, text: 'Start working and earning!' }].map((step, index) => (
                       <div key={index} className="flex">
                         <div className="flex flex-col items-center mr-4">
-                          <div className="bg-gray-800/20 p-3 rounded-full mb-2">
+                          <div className="bg-gray-900/20 p-3 rounded-full mb-2">
                             <step.icon className="h-6 w-6 text-white" />
                           </div>
                           {index < 3 && (
@@ -880,8 +890,8 @@ const OpportunitiesPage = () => {
               </div>
 
               <div className="mt-8 flex justify-end gap-4">
-                <button onClick={handleCloseJobModal} className="px-4 py-2 text-zinc-300 hover:text-white transition-colors cursor-pointer">Close</button>
-                <button onClick={() => setShowApplicationForm(true)} className="bg-white text-black px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
+                <button onClick={handleCloseJobModal} className="px-4 py-2 text-zinc-100 hover:text-zinc-100 transition-colors cursor-pointer">Close</button>
+                <button onClick={() => setShowApplicationForm(true)} className="bg-white text-black px-6 py-2 rounded-lg transition-colors flex items-center gap-2 cursor-pointer hover:bg-gray-200">
                   Continue to Application
                 </button>
               </div>
@@ -899,14 +909,14 @@ const OpportunitiesPage = () => {
                 initial={{ opacity: 0.95, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gray-900 w-full h-full flex flex-col"
+                className="bg-black w-full h-full flex flex-col"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="p-4 border-b border-gray-700 flex justify-between items-center flex-shrink-0">
                     <h2 className="text-xl font-bold text-white">Apply for {selectedJob.title}</h2>
                     <button
                         onClick={() => setShowApplicationForm(false)}
-                        className="text-zinc-400 hover:text-white transition-colors text-5xl font-light leading-none p-2 rounded-full hover:bg-gray-700 w-12 h-12 flex items-center justify-center cursor-pointer"
+                        className="text-zinc-200 hover:text-white transition-colors text-5xl font-light leading-none p-2 rounded-full hover:bg-gray-800 w-12 h-12 flex items-center justify-center cursor-pointer"
                         aria-label="Close application form"
                     >
                         &times;
@@ -920,12 +930,12 @@ const OpportunitiesPage = () => {
         )}
 
         <motion.div initial={{ scale: 0.9 }} whileInView={{ scale: 1 }} className="mt-20 text-center">
-          <div className="bg-gray-800/30 p-8 rounded-2xl border border-gray-400/20">
+          <div className="bg-gray-900/30 p-8 rounded-2xl border border-gray-500/20">
             <h2 className="text-3xl font-bold text-white mb-4">Not Seeing Your Expertise?</h2>
-            <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
+            <p className="text-zinc-100 mb-6 max-w-xl mx-auto">
               We&apos;re constantly expanding our domains. Join our talent network to be notified of new opportunities matching your skills.
             </p>
-            <a href="mailto:talent@trainova.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer">
+            <a href="mailto:talent@trainova.io?subject=Talent%20Network%20Application&body=Please%20include%3A%0A-%20Your%20full%20name%0A-%20Areas%20of%20expertise%0A-%20Relevant%20experience%0A-%20Certifications%0A-%20Availability" target="_blank" rel="noopener noreferrer" className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-block cursor-pointer hover:bg-gray-200">
               Join Talent Network
             </a>
           </div>

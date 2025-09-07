@@ -17,6 +17,8 @@ import {
 
 const DomainsSection = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [particles, setParticles] = useState<React.CSSProperties[]>([]);
+
   const categories = [
     {icon: FaPenFancy, title: 'Creative Writing', color: 'from-pink-500 to-purple-500' },
     { icon: FaSeedling, title: 'Generalist', color: 'from-green-500 to-teal-500' },
@@ -30,6 +32,14 @@ const DomainsSection = () => {
 
   useEffect(() => {
     setIsMounted(true);
+    const newParticles = Array.from({ length: 20 }).map(() => ({
+      width: `${Math.random() * 10 + 5}px`,
+      height: `${Math.random() * 10 + 5}px`,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      animationDuration: `${Math.random() * 5 + 5}s`,
+    }));
+    setParticles(newParticles);
   }, []);
 
   return (
@@ -37,22 +47,17 @@ const DomainsSection = () => {
       {/* Conditional particle rendering */}
       <div className="absolute inset-0 opacity-10">
         {isMounted &&
-          [...Array(20)].map((_, i) => (
+          particles.map((style, i) => (
             <motion.div
               key={i}
               className="absolute bg-white rounded-full"
-              style={{
-                width: Math.random() * 10 + 5 + 'px',
-                height: Math.random() * 10 + 5 + 'px',
-                top: Math.random() * 100 + '%',
-                left: Math.random() * 100 + '%',
-              }}
+              style={style}
               animate={{
                 y: [0, -100],
                 opacity: [0.5, 0],
               }}
               transition={{
-                duration: Math.random() * 5 + 5,
+                duration: parseFloat(style.animationDuration as string),
                 repeat: Infinity,
                 ease: 'linear',
               }}

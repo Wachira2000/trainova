@@ -53,7 +53,7 @@ const TermsOfUse = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <motion.div
@@ -61,11 +61,9 @@ const TermsOfUse = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-transparent bg-clip-text">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Terms of Use
-            </h1>
-          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white">
+            Terms of Use
+          </h1>
           <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
             Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -75,10 +73,10 @@ const TermsOfUse = () => {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="mb-20 bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-purple-400/20"
+          className="mb-20 bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700"
         >
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <FaBook className="text-purple-400" />
+            <FaBook className="text-cyan-400" />
             Document Overview
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -86,9 +84,9 @@ const TermsOfUse = () => {
               <a 
                 key={index}
                 href={`#section-${index}`}
-                className="text-zinc-300 hover:text-purple-400 transition-colors flex items-center gap-2"
+                className="text-zinc-300 hover:text-cyan-400 transition-colors flex items-center gap-2"
               >
-                <span className="text-purple-400">§{index + 1}</span>
+                <span className="text-cyan-400">§{index + 1}</span>
                 {section.title}
               </a>
             ))}
@@ -104,11 +102,11 @@ const TermsOfUse = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-purple-400 transition-all"
+              className="bg-gray-800/30 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 hover:border-cyan-400 transition-all"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-purple-500/20 rounded-lg">
-                  <section.icon className="h-6 w-6 text-purple-400" />
+                <div className="p-3 bg-cyan-500/20 rounded-lg">
+                  <section.icon className="h-6 w-6 text-cyan-400" />
                 </div>
                 <h2 className="text-2xl font-bold text-white">
                   §{index + 1} {section.title}
@@ -127,9 +125,9 @@ const TermsOfUse = () => {
           whileInView={{ scale: 1 }}
           className="mt-20 text-center"
         >
-          <div className="bg-gray-800/30 p-8 rounded-2xl border border-purple-400/20">
+          <div className="bg-gray-800/30 p-8 rounded-2xl border border-gray-700">
             <h2 className="text-3xl font-bold text-white mb-4 flex items-center justify-center gap-3">
-              <FaEnvelope className="text-purple-400" />
+              <FaEnvelope className="text-cyan-400" />
               Legal Inquiries
             </h2>
             <p className="text-zinc-300 mb-6 max-w-xl mx-auto">
@@ -137,7 +135,7 @@ const TermsOfUse = () => {
             </p>
             <a
               href="mailto:legal@yourcompany.com"
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
+              className="bg-white text-black px-8 py-3 rounded-lg hover:scale-105 transition-transform inline-flex items-center gap-2"
             >
               Contact Legal Team
             </a>
