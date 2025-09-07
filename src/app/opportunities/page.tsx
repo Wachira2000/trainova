@@ -45,12 +45,6 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
     email: '',
     phone: '',
     resume: null as File | null,
-    certificateName: '',
-    issuingOrganization: '',
-    certificateNo: '',
-    certificateUrl: '',
-    certificateFile: null as File | null,
-    educationLevel: '',
     country: '',
     state: '',
     availability: '',
@@ -64,7 +58,6 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
   const [error, setError] = useState<string | null>(null);
   const [fileNames, setFileNames] = useState({
     resume: '',
-    certificateFile: '',
     computerSpecs: '',
     internetSpeedScreenshot: ''
   });
@@ -99,7 +92,7 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
 
     try {
       // Step 1: Get signed URLs and upload files
-      const fileFields: (keyof typeof formData)[] = ['resume', 'certificateFile', 'computerSpecs', 'internetSpeedScreenshot'];
+      const fileFields: (keyof typeof formData)[] = ['resume', 'computerSpecs', 'internetSpeedScreenshot'];
       const filepaths: { [key: string]: string } = {};
 
       for (const field of fileFields) {
@@ -263,95 +256,6 @@ const ApplicationFormComponent = ({ jobTitle }: { jobTitle: string }) => {
             <FileInput name="resume" label="Upload Resume" required={true} accept=".pdf,.doc,.docx" />
 
             <div className="space-y-6 pt-6 border-t border-gray-700">
-                <h2 className="text-2xl font-bold text-white">Education & Qualifications</h2>
-                <p className="text-lg font-medium text-zinc-100">Add your AI Annotation certificate</p>
-                <p className="text-sm text-zinc-400">
-                    Please upload a valid certificate from <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Udemy</a> or <a href="https://www.skillshare.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Skillshare</a>. Certificates that cannot be verified will not be accepted.
-                </p>
-                <div>
-                    <label htmlFor="certificateName" className="block text-sm font-medium text-zinc-100">
-                        Certificate Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="certificateName"
-                        id="certificateName"
-                        value={formData.certificateName}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="issuingOrganization" className="block text-sm font-medium text-zinc-100">
-                        Issuing Organization <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        name="issuingOrganization"
-                        id="issuingOrganization"
-                        value={formData.issuingOrganization}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-                    >
-                        <option value="">Select an organization</option>
-                        <option value="Udemy">Udemy</option>
-                        <option value="Skillshare">Skillshare</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="certificateNo" className="block text-sm font-medium text-zinc-100">
-                        Certificate No. <span className="text-red-500">*</span> <span className="text-zinc-500 text-xs">(Input the unique certificate number.)</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="certificateNo"
-                        id="certificateNo"
-                        value={formData.certificateNo}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="certificateUrl" className="block text-sm font-medium text-zinc-100">
-                        Certificate URL <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="url"
-                        name="certificateUrl"
-                        id="certificateUrl"
-                        value={formData.certificateUrl}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-                        placeholder="https://www.example.com/certificate/123"
-                    />
-                </div>
-                <FileInput name="certificateFile" label="Certificate File" required={true} accept=".pdf,.jpg,.jpeg,.png" />
-                <div>
-                    <label htmlFor="educationLevel" className="block text-sm font-medium text-zinc-100">
-                        Highest level of education completed <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        name="educationLevel"
-                        id="educationLevel"
-                        value={formData.educationLevel}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 block w-full bg-gray-900 border-gray-700 rounded-lg shadow-sm py-3 px-4 text-white focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-                    >
-                        <option value="">Select level</option>
-                        <option value="High School">High School Diploma or GED</option>
-                        <option value="Some College">Some College, no degree</option>
-                        <option value="Associate">Associate Degree</option>
-                        <option value="Bachelor">Bachelor's Degree</option>
-                        <option value="Master">Master's Degree</option>
-                        <option value="Doctorate">Doctorate or higher</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
                 <div>
                     <label htmlFor="country" className="block text-sm font-medium text-zinc-100">
                         Country of residence <span className="text-red-500">*</span>
