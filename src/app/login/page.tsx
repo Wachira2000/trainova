@@ -68,14 +68,14 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 mt-1 bg-gray-700 border border-zinc-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                className="w-full px-3 py-2 mt-1 bg-gray-700 border border-zinc-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
               />
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <div>
               <button
                 type="submit"
-                className="w-full bg-white text-black font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="w-full bg-white text-black font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer"
               >
                 Sign in
               </button>
