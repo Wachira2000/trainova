@@ -14,10 +14,23 @@ const parseForm = async (req: NextRequest): Promise<{ fields: formidable.Fields;
     const uploadDir = path.join(process.cwd(), 'uploads');
     await fs.promises.mkdir(uploadDir, { recursive: true });
 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_MIME_TYPES = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/png',
+    ];
+
     return new Promise(async (resolve, reject) => {
         const form = formidable({
             uploadDir: uploadDir,
             keepExtensions: true,
+            maxFileSize: MAX_FILE_SIZE,
+            filter: ({ mimetype }) => {
+                return !!(mimetype && ALLOWED_MIME_TYPES.includes(mimetype));
+            },
         });
 
         const body = req.body;
@@ -48,9 +61,12 @@ export async function POST(req: NextRequest) {
         const filepaths: { [key: string]: string } = {};
 
         for (const key in files) {
-            const file = files[key] as formidable.File;
-            if (file) {
-                filepaths[key] = file.filepath;
+            const fileOrFiles = files[key];
+            if (fileOrFiles) {
+                const file = Array.isArray(fileOrFiles) ? fileOrFiles[0] : fileOrFiles;
+                if (file) {
+                    filepaths[key] = file.filepath;
+                }
             }
         }
 
