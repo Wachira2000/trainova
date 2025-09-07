@@ -10,44 +10,68 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const MotionLink = motion(Link);
 
-  const navItems = [
+  const centeredNavItems = [
     { name: 'How it works', path: '/how-it-works' },
     { name: 'Blog', path: '/blog' },
     { name: 'FAQ', path: '/faq' },
+  ];
+
+  const rightNavItems = [
+    { name: 'Log in', path: '/login' },
     { name: 'View Opportunities', path: '/opportunities' },
   ];
+
+  const navItems = [...centeredNavItems, ...rightNavItems];
 
   return (
     <nav className="w-full bg-black backdrop-blur-md border-b border-gray-800 fixed top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-grow flex items-center">
+          <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 text-white text-2xl font-bold">
               <FaLightbulb className="text-white" />
               <span>Trainova</span>
             </Link>
           </div>
 
-          {/* Desktop Navigation - Fixed */}
+          {/* Centered Links */}
+          <div className="hidden md:flex flex-grow justify-center">
+            <div className="flex items-center space-x-8">
+              {centeredNavItems.map((item, index) => (
+                <MotionLink
+                  key={item.name}
+                  href={item.path}
+                  className={'text-white transition-colors relative hover:text-gray-300 group'}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.3 }}
+                >
+                  {item.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-px bg-white transition-all group-hover:w-full" />
+                </MotionLink>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Aligned Buttons */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
+            {rightNavItems.map((item, index) => (
               <MotionLink
                 key={item.name}
                 href={item.path}
                 className={`text-white transition-colors relative ${
                   item.name === 'View Opportunities' 
                     ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2'
+                    : item.name === 'Log in'
+                    ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 hover:bg-gray-800'
                     : 'hover:text-gray-300'
                 }`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.3 }}
+                transition={{ delay: (index + centeredNavItems.length) * 0.1 + 0.3 }}
               >
                 {item.name}
-                {item.name !== 'View Opportunities' && (
-                  <span className="absolute bottom-0 left-0 w-0 h-px transition-all group-hover:w-full" />
-                )}
               </MotionLink>
             ))}
           </div>
@@ -78,6 +102,8 @@ const Navbar = () => {
                     className={`block text-gray-400 transition-colors ${
                       item.name === 'View Opportunities'
                         ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center'
+                        : item.name === 'Log in'
+                        ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center hover:bg-gray-800'
                         : 'hover:text-white'
                     }`}
                     onClick={() => setIsOpen(false)}
