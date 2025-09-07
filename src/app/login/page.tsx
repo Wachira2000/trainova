@@ -2,34 +2,32 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    const data = await response.json();
-
-    if (response.ok) {
-      setError('');
-      // Here you would typically handle the actual login logic
-      // For now, we'll just redirect to the homepage on successful validation
-      router.push('/');
+    if (error) {
+      setError(error.message);
     } else {
-      setError(data.error);
+      // Redirect to a protected route or dashboard on successful login
+      router.push('/');
     }
+    setLoading(false);
   };
 
   return (
@@ -75,9 +73,10 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
-                className="w-full bg-white text-black font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer"
+                disabled={loading}
+                className="w-full bg-white text-black font-semibold py-3 px-6 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
               >
-                Sign in
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
           </form>
