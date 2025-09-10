@@ -3,9 +3,33 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+
+const PasswordInput = ({ name, id, value, onChange, required = false }: { name: string, id: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        id={id}
+        name={name}
+        type={showPassword ? 'text' : 'password'}
+        required={required}
+        value={value}
+        onChange={onChange}
+        className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md shadow-sm text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      />
+      <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="absolute inset-y-0 right-0 px-3 flex items-center text-zinc-400 cursor-pointer"
+      >
+        {showPassword ? <FiEyeOff /> : <FiEye />}
+      </button>
+    </div>
+  );
+};
 
 export default function UpdatePasswordForm({ user }: { user: User }) {
-  const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,19 +48,6 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
 
     setLoading(true);
 
-    // First, verify the old password by trying to sign in with it.
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: user.email!,
-      password: oldPassword,
-    });
-
-    if (signInError) {
-      setError('Incorrect old password.');
-      setLoading(false);
-      return;
-    }
-
-    // If the old password was correct, update to the new password.
     const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
     
     setLoading(false);
@@ -45,7 +56,6 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
       setError(updateError.message);
     } else {
       setSuccess('Password updated successfully!');
-      setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     }
@@ -54,40 +64,12 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
   return (
     <form onSubmit={handleUpdatePassword} className="space-y-4">
       <div>
-        <label htmlFor="oldPassword" className="block text-sm font-medium text-zinc-300">Old Password</label>
-        <input
-          id="oldPassword"
-          name="oldPassword"
-          type="password"
-          required
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-          className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md shadow-sm text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
-      </div>
-      <div>
         <label htmlFor="newPassword" className="block text-sm font-medium text-zinc-300">New Password</label>
-        <input
-          id="newPassword"
-          name="newPassword"
-          type="password"
-          required
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md shadow-sm text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
+        <PasswordInput name="newPassword" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
       </div>
       <div>
         <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300">Confirm New Password</label>
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          required
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md shadow-sm text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        />
+        <PasswordInput name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}
       {success && <p className="text-sm text-green-500">{success}</p>}

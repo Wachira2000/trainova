@@ -36,6 +36,11 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
     }
   };
 
+  const handleCancelUpload = () => {
+    setAvatarFile(null);
+    setAvatarPreview(profile.avatar_url || null);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfile(prev => ({ ...prev, [name]: value }));
@@ -129,11 +134,18 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
           className="w-24 h-24 rounded-full bg-gray-700 mr-8"
         />
         {isEditing && (
-          <label htmlFor="avatar-upload" className="bg-gray-700 border border-zinc-600 rounded-md shadow-sm py-2 px-3 text-sm font-medium text-white hover:bg-gray-600 cursor-pointer">
-            <FiUpload className="inline-block mr-2" />
-            <span>Upload New Photo</span>
-            <input id="avatar-upload" name="avatar-upload" type="file" className="sr-only" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} />
-          </label>
+          <div className="flex items-center gap-2">
+            <label htmlFor="avatar-upload" className="bg-gray-700 border border-zinc-600 rounded-md shadow-sm py-2 px-3 text-sm font-medium text-white hover:bg-gray-600 cursor-pointer">
+              <FiUpload className="inline-block mr-2" />
+              <span>{avatarFile ? avatarFile.name : 'Upload New Photo'}</span>
+              <input id="avatar-upload" name="avatar-upload" type="file" className="sr-only" accept="image/png, image/jpeg, image/gif, image/webp" onChange={handleFileChange} />
+            </label>
+            {avatarFile && (
+              <button onClick={handleCancelUpload} className="text-red-500 hover:text-red-400 cursor-pointer">
+                <FiX />
+              </button>
+            )}
+          </div>
         )}
       </div>
 
