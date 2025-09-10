@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const PasswordInput = ({ name, id, value, onChange, required = false }: { name: string, id: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,6 +36,7 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,15 +51,16 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
     setLoading(true);
 
     const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
-    
-    setLoading(false);
 
     if (updateError) {
       setError(updateError.message);
+      setLoading(false);
     } else {
-      setSuccess('Password updated successfully!');
-      setNewPassword('');
-      setConfirmPassword('');
+      setSuccess('Password updated successfully! Redirecting to login...');
+      setTimeout(async () => {
+        await supabase.auth.signOut();
+        router.push('/login');
+      }, 3000);
     }
   };
 

@@ -83,10 +83,12 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
 
       if (data) {
         setSuccess('Profile updated successfully!');
+        setTimeout(() => setSuccess(''), 10000);
         onUpdate(data);
         setProfile(data);
         setAvatarFile(null);
         setIsEditing(false);
+        localStorage.setItem('profile_updated', 'true');
       }
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -131,7 +133,7 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
         <img 
           src={avatarPreview || `https://api.dicebear.com/7.x/initials/svg?seed=${profile.full_name}`}
           alt="Profile"
-          className="w-24 h-24 rounded-full bg-gray-700 mr-8"
+          className="w-24 h-24 rounded-full bg-gray-700 mr-8 object-cover"
         />
         {isEditing && (
           <div className="flex items-center gap-2">

@@ -40,8 +40,29 @@ const Navbar = () => {
       setLoading(false);
     });
 
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'profile_updated' && event.newValue === 'true') {
+        const fetchProfile = async () => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', user.id)
+              .single();
+            setProfile(profileData);
+          }
+        };
+        fetchProfile();
+        localStorage.removeItem('profile_updated');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
       authListener.subscription.unsubscribe();
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
   const MotionLink = motion(Link);
@@ -210,7 +231,6 @@ const ProfileDropdown = ({ user, profile }: { user: User; profile: Profile }) =>
   const dropdownItems = [
     { name: 'Workpage', path: '/workpage', icon: FiBriefcase },
     { name: 'Profile', path: '/profile', icon: FiUser },
-    { name: 'Upload Profile', path: '/upload-profile', icon: FiUploadCloud },
     { name: 'Payment Details', path: '/payments', icon: FiCreditCard },
     ...(profile?.role === 'admin' ? [{ name: 'Add Users', path: '/admin/create-user', icon: FiPlus }] : []),
   ];
@@ -236,7 +256,7 @@ const ProfileDropdown = ({ user, profile }: { user: User; profile: Profile }) =>
             className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-zinc-700"
           >
             {dropdownItems.map(item => (
-              <Link key={item.name} href={item.path} className="flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-700 w-full text-left">
+              <Link key={item.name} href={item.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-white hover:bg-gray-700 w-full text-left">
                 <item.icon />
                 <span>{item.name}</span>
               </Link>
