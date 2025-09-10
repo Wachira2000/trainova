@@ -20,9 +20,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabaseAdmin.storage
       .from('avatars')
-      .createSignedUploadUrl(filePath, {
-        contentType: fileType,
-      });
+      .createSignedUploadUrl(filePath);
 
     if (error) {
       console.error('Error creating signed URL:', error);
