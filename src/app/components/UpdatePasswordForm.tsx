@@ -50,17 +50,30 @@ export default function UpdatePasswordForm({ user }: { user: User }) {
 
     setLoading(true);
 
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
 
-    if (updateError) {
-      setError(updateError.message);
+      if (updateError) {
+        setError(updateError.message);
+      } else {
+        setSuccess('Password updated successfully! Redirecting to login...');
+        setTimeout(async () => {
+          try {
+            await supabase.auth.signOut();
+            router.push('/login');
+          } catch (signOutError) {
+            console.error('Error signing out:', signOutError);
+            // Even if sign out fails, redirect to login
+            router.push('/login');
+          }
+        }, 2000); // Reduced timeout to 2 seconds for better UX
+      }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      // ✅ Always set loading to false, regardless of success or failure
       setLoading(false);
-    } else {
-      setSuccess('Password updated successfully! Redirecting to login...');
-      setTimeout(async () => {
-        await supabase.auth.signOut();
-        router.push('/login');
-      }, 3000);
     }
   };
 

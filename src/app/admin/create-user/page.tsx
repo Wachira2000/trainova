@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
@@ -164,9 +164,9 @@ export default function CreateUserPage() {
   }
 
   return (
-    <main>
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="w-full max-w-md p-8 space-y-6 bg-black rounded-lg shadow-md border border-zinc-700">
+    <main className="min-h-screen bg-black text-white p-8 pt-24">
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-2xl shadow-md border border-zinc-800">
           <h1 className="text-2xl font-bold text-center text-white">Create New User</h1>
           <form className="space-y-6" onSubmit={handleCreateUser}>
             <div>
