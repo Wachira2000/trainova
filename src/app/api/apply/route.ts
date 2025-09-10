@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        const verificationData = await verificationResponse.json();
+        const verificationData = await verificationResponse.json() as { data: { status: string } };
 
         if (verificationData.data.status !== 'success') {
             return NextResponse.json({ message: 'Payment verification failed' }, { status: 400 });
