@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const filePath = `${Date.now()}-${fileName}`;
 
     const { data, error } = await supabaseAdmin.storage
-      .from('applications')
+      .from('avatars')
       .createSignedUploadUrl(filePath, {
         contentType: fileType,
       });

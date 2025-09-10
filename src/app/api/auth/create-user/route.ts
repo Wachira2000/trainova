@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json()
+  const { email, password, fullName, avatarUrl, role } = await request.json()
 
   // Note: These environment variables should be configured in your Vercel/hosting environment.
   // They should not be exposed on the client side.
@@ -15,15 +15,36 @@ export async function POST(request: Request) {
 
   const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey)
 
-  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+  // Create the user in the auth.users table
+  const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email: email,
     password: password,
     email_confirm: true, // Automatically confirm the user's email
   })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+  if (authError) {
+    return NextResponse.json({ error: authError.message }, { status: 400 })
   }
 
-  return NextResponse.json({ user: data.user })
+  if (!authData.user) {
+    return NextResponse.json({ error: 'User could not be created.' }, { status: 500 })
+  }
+
+  // The trigger has already created a profile. Now, update it with the full name and avatar URL.
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .update({ full_name: fullName, avatar_url: avatarUrl, role: role })
+    .eq('id', authData.user.id)
+
+  if (profileError) {
+    // Even if updating the profile fails, the user was created.
+    // You might want to handle this case, e.g., by deleting the auth user or logging the error.
+    console.error('Error updating profile:', profileError)
+    return NextResponse.json({ 
+      user: authData.user, 
+      warning: 'User was created, but profile could not be updated.' 
+    })
+  }
+
+  return NextResponse.json({ user: authData.user })
 }
