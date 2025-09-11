@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiPlus, FiCreditCard, FiUploadCloud, FiBriefcase } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiPlus, FiCreditCard, FiUploadCloud, FiBriefcase, FiDollarSign } from 'react-icons/fi';
 import { useState, useEffect, memo, useRef } from 'react';
 import { FaLightbulb } from 'react-icons/fa';
 import { supabase } from '@/lib/supabaseClient';
@@ -66,6 +66,7 @@ const Navbar = () => {
     };
   }, []);
   const MotionLink = motion(Link);
+  const MotionAnchor = motion.a;
 
   const centeredNavItems = [
     { name: 'How it works', path: '/how-it-works' },
@@ -103,24 +104,30 @@ const Navbar = () => {
 
       {/* Right Aligned Buttons */}
       <div className="hidden md:flex items-center space-x-8">
-        {rightNavItems.map((item, index) => (
-          <MotionLink
-            key={item.name}
-            href={item.path}
-            className={`text-white transition-colors relative ${
-              item.name === 'View Opportunities' 
-                ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2'
-                : item.name === 'Log in'
-                ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 hover:bg-gray-800'
-                : 'hover:text-gray-300'
-            }`}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: (index + centeredNavItems.length) * 0.1 + 0.3 }}
-          >
-            {item.name}
-          </MotionLink>
-        ))}
+        {rightNavItems.map((item, index) => {
+          const isLogin = item.name === 'Log in';
+          const Component = isLogin ? MotionAnchor : MotionLink;
+          return (
+            <Component
+              key={item.name}
+              href={item.path}
+              target={isLogin ? '_blank' : undefined}
+              rel={isLogin ? 'noopener noreferrer' : undefined}
+              className={`text-white transition-colors relative ${
+                item.name === 'View Opportunities' 
+                  ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2'
+                  : item.name === 'Log in'
+                  ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 hover:bg-gray-800'
+                  : 'hover:text-gray-300'
+              }`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (index + centeredNavItems.length) * 0.1 + 0.3 }}
+            >
+              {item.name}
+            </Component>
+          )}
+        )}
       </div>
     </>
   );
@@ -181,22 +188,28 @@ const Navbar = () => {
               className="md:hidden absolute top-16 left-0 right-0 bg-black border-t border-gray-800"
             >
               <div className="px-4 py-4 space-y-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.path}
-                    className={`block text-gray-400 transition-colors ${
-                      item.name === 'View Opportunities'
-                        ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center'
-                        : item.name === 'Log in'
-                        ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center hover:bg-gray-800'
-                        : 'hover:text-white'
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                {navItems.map((item) => {
+                  const isLogin = item.name === 'Log in';
+                  const Component = isLogin ? 'a' : Link;
+                  return (
+                    <Component
+                      key={item.name}
+                      href={item.path}
+                      target={isLogin ? '_blank' : undefined}
+                      rel={isLogin ? 'noopener noreferrer' : undefined}
+                      className={`block text-gray-400 transition-colors text-center ${
+                        item.name === 'View Opportunities'
+                          ? 'bg-white !text-black px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center'
+                          : item.name === 'Log in'
+                          ? 'border border-gray-500 px-4 py-2 rounded-lg text-base font-semibold inline-flex items-center gap-2 justify-center hover:bg-gray-800'
+                          : 'hover:text-white'
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </Component>
+                  )}
+                )}
               </div>
             </motion.div>
           )}
@@ -232,7 +245,10 @@ const ProfileDropdown = ({ user, profile }: { user: User; profile: Profile }) =>
     { name: 'Workpage', path: '/workpage', icon: FiBriefcase },
     { name: 'Profile', path: '/profile', icon: FiUser },
     { name: 'Payment Details', path: '/payments', icon: FiCreditCard },
-    ...(profile?.role === 'admin' ? [{ name: 'Add Users', path: '/admin/create-user', icon: FiPlus }] : []),
+    ...(profile?.role === 'admin' ? [
+      { name: 'Add Users', path: '/admin/create-user', icon: FiPlus },
+      { name: 'Withdrawals', path: '/admin/withdrawals', icon: FiDollarSign }
+    ] : []),
   ];
 
   return (

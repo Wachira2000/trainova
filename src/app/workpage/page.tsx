@@ -1,129 +1,203 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FiPlus, FiUser, FiDollarSign, FiCheckCircle, FiClock, FiList, FiCoffee } from 'react-icons/fi';
+import { FiDollarSign, FiX } from 'react-icons/fi';
+import { supabase } from '@/lib/supabaseClient';
+import { User } from '@supabase/supabase-js';
+import WorkpageLayout from '../components/WorkpageLayout';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-
-// Mock data - we will replace this with Supabase data later
-const mockTasks = [
-  { id: 1, title: 'Review and tag 100 images', status: 'available', payout: 50.00 },
-  { id: 2, title: 'Transcribe 30-minute audio file', status: 'pending', payout: 75.00 },
-  { id: 3, title: 'Categorize customer feedback', status: 'approved', payout: 120.00 },
-  { id: 4, title: 'Data entry for 200 records', status: 'completed', payout: 200.00 },
-  { id: 5, title: 'Find contact information for 50 leads', status: 'available', payout: 40.00 },
-];
-
-const statusConfig = {
-  available: { color: 'bg-green-500', icon: FiList },
-  pending: { color: 'bg-yellow-500', icon: FiClock },
-  approved: { color: 'bg-blue-500', icon: FiCheckCircle },
-  completed: { color: 'bg-gray-500', icon: FiCheckCircle },
-};
+interface UserMetrics {
+  total_earned: number;
+  pending_withdrawal: number;
+  completed_tasks: number;
+  pending_tasks: number;
+  approved_tasks: number;
+  available_tasks: number;
+}
 
 export default function Workpage() {
-  // We'll add state for user, tasks, etc. later
-  const [tasks, setTasks] = useState(mockTasks);
-  const isAdmin = true; // Placeholder for role-based access
+  const [userMetrics, setUserMetrics] = useState<UserMetrics>({
+    total_earned: 0,
+    pending_withdrawal: 0,
+    completed_tasks: 0,
+    pending_tasks: 0,
+    approved_tasks: 0,
+    available_tasks: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [withdrawMessage, setWithdrawMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const stats = {
-    completed: tasks.filter(t => t.status === 'completed').length,
-    pending: tasks.filter(t => t.status === 'pending').length,
-    approved: tasks.filter(t => t.status === 'approved').length,
-    available: tasks.filter(t => t.status === 'available').length,
-    earnings: tasks.filter(t => t.status === 'completed').reduce((acc, t) => acc + t.payout, 0),
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserMetrics();
+    }
+  }, [user]);
+
+  const fetchUserMetrics = async () => {
+    if (!user) return;
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('user_metrics')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      setError(error.message);
+    } else if (data) {
+      setUserMetrics({
+        total_earned: data.total_earned || 0,
+        pending_withdrawal: data.pending_withdrawal || 0,
+        completed_tasks: data.completed_tasks || 0,
+        pending_tasks: data.pending_tasks || 0,
+        approved_tasks: data.approved_tasks || 0,
+        available_tasks: data.available_tasks || 0,
+      });
+    }
+    setLoading(false);
   };
 
+  const handleWithdraw = async () => {
+    const amount = parseFloat(withdrawAmount);
+    if (isNaN(amount) || amount <= 0) {
+      setWithdrawMessage({ type: 'error', text: 'Please enter a valid amount.' });
+      return;
+    }
+    if (amount > userMetrics.total_earned) {
+      setWithdrawMessage({ type: 'error', text: 'Withdrawal amount cannot exceed total earned.' });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('withdraw', {
+        body: { amount },
+      });
+
+      if (error) throw error;
+
+      setWithdrawMessage({ type: 'success', text: 'Withdrawal request submitted successfully.' });
+      setShowWithdrawModal(false);
+      fetchUserMetrics(); // Refresh metrics
+    } catch (error: any) {
+      setWithdrawMessage({ type: 'error', text: error.message || 'An error occurred.' });
+    } finally {
+      setWithdrawAmount('');
+      setTimeout(() => setWithdrawMessage(null), 5000);
+    }
+  };
+
+  if (loading) {
+    return <WorkpageLayout><div className="flex items-center justify-center h-full"><LoadingSpinner size={40} /></div></WorkpageLayout>;
+  }
+
+  if (error) {
+    return <WorkpageLayout><div className="flex items-center justify-center h-full">Error: {error}</div></WorkpageLayout>;
+  }
+
   return (
-    <main className="bg-black min-h-screen text-white">
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
-        
-        {/* Header */}
-        <header className="flex justify-end items-center mb-8">
-          <div className="flex items-center gap-4">
-            <button className="bg-white text-black font-semibold py-2 px-4 rounded-lg flex items-center gap-2">
-              <FiDollarSign />
-              <span>Withdraw</span>
-            </button>
+    <WorkpageLayout>
+      <div className="flex flex-col h-full">
+        <header className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Overview</h1>
+            <p className="text-zinc-400">A summary of your earnings and activity.</p>
           </div>
+          <button 
+            onClick={() => setShowWithdrawModal(true)}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 cursor-pointer transition-colors"
+          >
+            <FiDollarSign />
+            <span>Withdraw</span>
+          </button>
         </header>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-green-400">Total Earned</h3>
-            <p className="text-4xl font-bold mt-2">${stats.earnings.toFixed(2)}</p>
+            <p className="text-4xl font-bold mt-2">${userMetrics.total_earned.toFixed(2)}</p>
           </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-zinc-400">Pending Withdrawals</h3>
-            <p className="text-4xl font-bold mt-2">$0.00</p>
+            <p className="text-4xl font-bold mt-2">${userMetrics.pending_withdrawal.toFixed(2)}</p>
           </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold text-zinc-400">Completed</h4>
-              <p className="text-2xl font-bold">{stats.completed}</p>
+              <p className="text-2xl font-bold">{userMetrics.completed_tasks}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Pending</h4>
-              <p className="text-2xl font-bold">{stats.pending}</p>
+              <p className="text-2xl font-bold">{userMetrics.pending_tasks}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Approved</h4>
-              <p className="text-2xl font-bold">{stats.approved}</p>
+              <p className="text-2xl font-bold">{userMetrics.approved_tasks}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Available</h4>
-              <p className="text-2xl font-bold">{stats.available}</p>
+              <p className="text-2xl font-bold">{userMetrics.available_tasks}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Task List */}
-        <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
-          <h2 className="text-xl font-bold mb-4">Tasks</h2>
-          <div className="space-y-4">
-            {tasks.length > 0 ? (
-              tasks.map(task => {
-                const Icon = statusConfig[task.status as keyof typeof statusConfig].icon;
-                const color = statusConfig[task.status as keyof typeof statusConfig].color;
-                return (
-                  <motion.div 
-                    key={task.id}
-                    className="bg-gray-800 p-4 rounded-lg flex justify-between items-center border border-zinc-700"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: task.id * 0.05 }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${color}`}>
-                        <Icon className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold">{task.title}</p>
-                        <p className="text-sm text-zinc-400 capitalize">{task.status}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-green-400">${task.payout.toFixed(2)}</p>
-                      {task.status === 'available' && (
-                        <button className="text-sm text-white hover:underline mt-1">Claim Task</button>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })
-            ) : (
-              <div className="text-center py-12">
-                <FiCoffee className="mx-auto text-5xl text-zinc-500 mb-4" />
-                <h3 className="text-xl font-semibold">No tasks right now.</h3>
-                <p className="text-zinc-400">Time for a coffee break!</p>
+      {/* Withdraw Modal */}
+      {showWithdrawModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-8 rounded-2xl border border-zinc-800 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Withdraw Funds</h2>
+              <button onClick={() => setShowWithdrawModal(false)} className="text-zinc-400 hover:text-white">
+                <FiX size={24} />
+              </button>
+            </div>
+            {withdrawMessage && (
+              <div className={`p-4 mb-4 rounded-lg ${withdrawMessage.type === 'success' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300'}`}>
+                {withdrawMessage.text}
               </div>
             )}
+            <div className="mb-4">
+              <label htmlFor="amount" className="block text-sm font-medium text-zinc-400 mb-2">Amount</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FiDollarSign className="text-zinc-400" />
+                </div>
+                <input
+                  type="number"
+                  id="amount"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  className="bg-gray-800 border border-zinc-700 text-white rounded-lg focus:ring-green-500 focus:border-green-500 block w-full pl-10 p-2.5"
+                  placeholder="0.00"
+                />
+              </div>
+              <p className="text-sm text-zinc-500 mt-2">
+                Available to withdraw: ${userMetrics.total_earned.toFixed(2)}
+              </p>
+            </div>
+            <button
+              onClick={handleWithdraw}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+            >
+              Confirm Withdrawal
+            </button>
           </div>
         </div>
-
-      </div>
-    </main>
+      )}
+    </WorkpageLayout>
   );
 }

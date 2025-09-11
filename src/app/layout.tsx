@@ -31,9 +31,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const noFooterPaths = ['/login', '/workpage', '/profile', '/payments'];
+  const noFooterPaths = [
+    '/login',
+    '/workpage',
+    '/profile',
+    '/payments',
+    '/admin/create-user',
+    '/admin/withdrawals'
+  ];
 
-  const showFooter = !noFooterPaths.includes(pathname);
+  const showFooter = !noFooterPaths.some(path => pathname.startsWith(path));
 
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning={true}>
