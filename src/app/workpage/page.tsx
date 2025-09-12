@@ -47,6 +47,20 @@ export default function Workpage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    const handleFocus = () => {
+      if (user) {
+        fetchUserData();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [user]); // Re-add listener if user changes
+
   const fetchUserData = async () => {
     if (!user) {
       setLoading(false);
