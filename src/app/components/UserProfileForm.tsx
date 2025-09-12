@@ -42,7 +42,7 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
     setAvatarPreview(profile.avatar_url || null);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProfile(prev => ({ ...prev, [name]: value }));
   };
