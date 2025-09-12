@@ -24,50 +24,60 @@ export default function TasksPage() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchUserAndTasks = async () => {
-      setLoading(true);
-      setError(null); // Clear previous errors
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+  const fetchUserAndTasks = async () => {
+    setLoading(true);
+    setError(null); // Clear previous errors
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
 
-      if (user) {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('job')
-          .eq('id', user.id)
-          .single();
+    if (user) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('job')
+        .eq('id', user.id)
+        .single();
 
-        if (profileError) {
-          setError(profileError.message);
-          setLoading(false);
-          return;
-        }
+      if (profileError) {
+        setError(profileError.message);
+        setLoading(false);
+        return;
+      }
 
-        if (profile && profile.job) {
-          const { data: tasksData, error: tasksError } = await supabase
-            .from('tasks')
-            .select('*')
-            .eq('status', 'available')
-            .eq('category', profile.job); // Filter by user's job category
+      if (profile && profile.job) {
+        const { data: tasksData, error: tasksError } = await supabase
+          .from('tasks')
+          .select('*')
+          .eq('status', 'available')
+          .eq('category', profile.job); // Filter by user's job category
 
-          if (tasksError) {
-            setError(tasksError.message);
-          } else if (tasksData) {
-            const tasksWithTags = tasksData.map(t => ({ ...t, tags: ['Data Annotation', 'Image Recognition']}))
-            setTasks(tasksWithTags);
-          }
-        } else {
-          // Handle case where user has no job assigned
-          setTasks([]);
+        if (tasksError) {
+          setError(tasksError.message);
+        } else if (tasksData) {
+          const tasksWithTags = tasksData.map(t => ({ ...t, tags: ['Data Annotation', 'Image Recognition']}))
+          setTasks(tasksWithTags);
         }
       } else {
-        setError("You must be logged in to view tasks.");
+        // Handle case where user has no job assigned
+        setTasks([]);
       }
-      setLoading(false);
+    } else {
+      setError("You must be logged in to view tasks.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUserAndTasks();
+
+    const handleFocus = () => {
+      fetchUserAndTasks();
     };
 
-    fetchUserAndTasks();
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   if (loading) {
