@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FiDollarSign, FiX } from 'react-icons/fi';
+import { FiDollarSign, FiX, FiBriefcase } from 'react-icons/fi';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import WorkpageLayout from '../components/WorkpageLayout';
@@ -25,6 +25,7 @@ export default function Workpage() {
     approved_tasks: 0,
     available_tasks: 0,
   });
+  const [job, setJob] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -42,32 +43,51 @@ export default function Workpage() {
 
   useEffect(() => {
     if (user) {
-      fetchUserMetrics();
+      fetchUserData();
     }
   }, [user]);
 
-  const fetchUserMetrics = async () => {
-    if (!user) return;
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('user_metrics')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-      setError(error.message);
-    } else if (data) {
-      setUserMetrics({
-        total_earned: data.total_earned || 0,
-        pending_withdrawal: data.pending_withdrawal || 0,
-        completed_tasks: data.completed_tasks || 0,
-        pending_tasks: data.pending_tasks || 0,
-        approved_tasks: data.approved_tasks || 0,
-        available_tasks: data.available_tasks || 0,
-      });
+  const fetchUserData = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+    setLoading(true);
+    setError(null); // Clear previous errors
+
+    try {
+      // Fetch metrics and profile in parallel
+      const [metricsResponse, profileResponse] = await Promise.all([
+        supabase.from('user_metrics').select('*').eq('user_id', user.id).single(),
+        supabase.from('profiles').select('job').eq('id', user.id).single(),
+      ]);
+
+      const { data: metricsData, error: metricsError } = metricsResponse;
+      if (metricsError && metricsError.code !== 'PGRST116') {
+        throw new Error(metricsError.message);
+      } else if (metricsData) {
+        setUserMetrics({
+          total_earned: metricsData.total_earned || 0,
+          pending_withdrawal: metricsData.pending_withdrawal || 0,
+          completed_tasks: metricsData.completed_tasks || 0,
+          pending_tasks: metricsData.pending_tasks || 0,
+          approved_tasks: metricsData.approved_tasks || 0,
+          available_tasks: metricsData.available_tasks || 0,
+        });
+      }
+
+      const { data: profileData, error: profileError } = profileResponse;
+      if (profileError) {
+        // It's okay if a profile error occurs, we can still show metrics
+        console.warn('Could not fetch user job:', profileError.message);
+      } else if (profileData) {
+        setJob(profileData.job || 'Not Assigned');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleWithdraw = async () => {
@@ -90,7 +110,7 @@ export default function Workpage() {
 
       setWithdrawMessage({ type: 'success', text: 'Withdrawal request submitted successfully.' });
       setShowWithdrawModal(false);
-      fetchUserMetrics(); // Refresh metrics
+      fetchUserData(); // Refresh metrics
     } catch (error: any) {
       setWithdrawMessage({ type: 'error', text: error.message || 'An error occurred.' });
     } finally {
@@ -125,7 +145,11 @@ export default function Workpage() {
         </header>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
+            <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2"><FiBriefcase /> Your Role</h3>
+            <p className="text-4xl font-bold mt-2">{job}</p>
+          </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-green-400">Total Earned</h3>
             <p className="text-4xl font-bold mt-2">${userMetrics.total_earned.toFixed(2)}</p>

@@ -13,9 +13,10 @@ interface Profile {
   address?: string;
   city?: string;
   country?: string;
+  job?: string;
 }
 
-export default function UserProfileForm({ user, profile: initialProfile, onUpdate }: { user: User; profile: Profile; onUpdate: (newProfile: Partial<Profile>) => void }) {
+export default function UserProfileForm({ user, profile: initialProfile, onUpdate, isAdmin }: { user: User; profile: Profile; onUpdate: (newProfile: Partial<Profile>) => void; isAdmin: boolean }) {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(initialProfile);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -73,7 +74,8 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
           address: profile.address,
           city: profile.city,
           country: profile.country,
-          avatar_url: avatarUrl
+          avatar_url: avatarUrl,
+          job: profile.job,
         })
         .eq('id', user.id)
         .select()
@@ -191,6 +193,30 @@ export default function UserProfileForm({ user, profile: initialProfile, onUpdat
             <input type="text" name="city" id="city" value={profile.city || ''} onChange={handleInputChange} className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md text-white" />
           ) : (
             <p className="mt-1 text-white">{profile.city || 'Not provided'}</p>
+          )}
+        </div>
+        <div>
+          <label htmlFor="job" className="block text-sm font-medium text-zinc-400">Job Category</label>
+          {isEditing && isAdmin ? (
+            <select
+              id="job"
+              name="job"
+              value={profile.job || 'Generalist'}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 mt-1 bg-gray-800 border border-zinc-700 rounded-md text-white"
+            >
+              {[
+                'Agriculture', 'Automotive & Robotics', 'Biology', 'Chemistry', 'Computer Vision', 
+                'Cybersecurity', 'Design', 'Engineering & Built Environment', 'Environment', 'Ethics', 
+                'Finance', 'Generative AI', 'Healthcare', 'History', 'Languages & Linguistics', 'Law', 
+                'Legal', 'Lifestyle & Home', 'Marketing', 'Math', 'Music', 'Operations', 'Physics', 
+                'Programing', 'Social Media', 'Support', 'Video & Multimedia', 'Writing', 'Generalist'
+              ].sort().map(jobCategory => (
+                <option key={jobCategory} value={jobCategory}>{jobCategory}</option>
+              ))}
+            </select>
+          ) : (
+            <p className="mt-1 text-white">{profile.job || 'Not provided'}</p>
           )}
         </div>
       </div>

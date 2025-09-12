@@ -6,6 +6,7 @@ import { FiCheckCircle, FiClock, FiList, FiCoffee, FiInfo } from 'react-icons/fi
 import { supabase } from '@/lib/supabaseClient';
 import WorkpageLayout from '../../components/WorkpageLayout';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { User } from '@supabase/supabase-js';
 
 interface Task {
   id: number;
@@ -16,39 +17,58 @@ interface Task {
   tags: string[];
 }
 
-const statusConfig = {
-  available: { color: 'bg-green-500', icon: FiList },
-  pending: { color: 'bg-yellow-500', icon: FiClock },
-  approved: { color: 'bg-blue-500', icon: FiCheckCircle },
-  completed: { color: 'bg-gray-500', icon: FiCheckCircle },
-};
-
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    fetchTasks();
+    const fetchUserAndTasks = async () => {
+      setLoading(true);
+      setError(null); // Clear previous errors
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+
+      if (user) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('job')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          setError(profileError.message);
+          setLoading(false);
+          return;
+        }
+
+        if (profile && profile.job) {
+          const { data: tasksData, error: tasksError } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('status', 'available')
+            .eq('category', profile.job); // Filter by user's job category
+
+          if (tasksError) {
+            setError(tasksError.message);
+          } else if (tasksData) {
+            const tasksWithTags = tasksData.map(t => ({ ...t, tags: ['Data Annotation', 'Image Recognition']}))
+            setTasks(tasksWithTags);
+          }
+        } else {
+          // Handle case where user has no job assigned
+          setTasks([]);
+        }
+      } else {
+        setError("You must be logged in to view tasks.");
+      }
+      setLoading(false);
+    };
+
+    fetchUserAndTasks();
   }, []);
-
-  const fetchTasks = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('status', 'available'); // Only fetch available tasks
-
-    if (error) {
-      setError(error.message);
-    } else if (data) {
-      // Add mock tags for demonstration
-      const tasksWithTags = data.map(t => ({ ...t, tags: ['Data Annotation', 'Image Recognition']}))
-      setTasks(tasksWithTags);
-    }
-    setLoading(false);
-  };
 
   if (loading) {
     return (
@@ -110,8 +130,8 @@ export default function TasksPage() {
               ) : (
                 <div className="text-center py-12">
                   <FiCoffee className="mx-auto text-5xl text-zinc-500 mb-4" />
-                  <h3 className="text-xl font-semibold text-white">No tasks right now.</h3>
-                  <p className="text-zinc-400">Time for a coffee break!</p>
+                  <h3 className="text-xl font-semibold text-white">No tasks available for your job category right now.</h3>
+                  <p className="text-zinc-400">Please check back later!</p>
                 </div>
               )}
             </div>
@@ -129,7 +149,7 @@ export default function TasksPage() {
                 <p>{selectedTask.description || "No description available for this task."}</p>
               </div>
 
-              <button className="w-full mt-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+              <button className="w-full mt-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-lg transition-colors cursor-pointer">
                 Claim Task
               </button>
             </>

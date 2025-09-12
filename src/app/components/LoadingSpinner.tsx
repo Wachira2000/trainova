@@ -16,7 +16,8 @@ const LoadingSpinner = ({ size = 24 }: { size?: number }) => {
       className="rounded-full"
       animate={{ rotate: 360 }}
       transition={{ 
-        loop: Infinity,
+        repeat: Infinity,
+        repeatType: "loop",
         ease: "linear",
         duration: 0.8
       }}

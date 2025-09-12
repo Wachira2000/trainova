@@ -10,6 +10,7 @@ export default function CreateUserPage() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState('user');
+  const [job, setJob] = useState('Generalist'); // Default job
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -125,7 +126,7 @@ export default function CreateUserPage() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password, fullName, avatarUrl, role }),
+      body: JSON.stringify({ email, password, fullName, avatarUrl, role, job }),
     });
 
     const data = await response.json();
@@ -225,6 +226,29 @@ export default function CreateUserPage() {
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="job" className="block text-sm font-medium text-zinc-300">
+                Job Category
+              </label>
+              <select
+                id="job"
+                name="job"
+                required
+                value={job}
+                onChange={(e) => setJob(e.target.value)}
+                className="w-full px-3 py-2 mt-1 bg-gray-700 border border-zinc-600 rounded-md shadow-sm text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                {[
+                  'Agriculture', 'Automotive & Robotics', 'Biology', 'Chemistry', 'Computer Vision', 
+                  'Cybersecurity', 'Design', 'Engineering & Built Environment', 'Environment', 'Ethics', 
+                  'Finance', 'Generative AI', 'Healthcare', 'History', 'Languages & Linguistics', 'Law', 
+                  'Legal', 'Lifestyle & Home', 'Marketing', 'Math', 'Music', 'Operations', 'Physics', 
+                  'Programing', 'Social Media', 'Support', 'Video & Multimedia', 'Writing', 'Generalist'
+                ].sort().map(jobCategory => (
+                  <option key={jobCategory} value={jobCategory}>{jobCategory}</option>
+                ))}
               </select>
             </div>
             <div>

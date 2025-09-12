@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
-  const { email, password, fullName, avatarUrl, role } = await request.json()
+  const { email, password, fullName, avatarUrl, role, job } = await request.json()
 
   // Note: These environment variables should be configured in your Vercel/hosting environment.
   // They should not be exposed on the client side.
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   // The trigger has already created a profile. Now, update it with the full name and avatar URL.
   const { error: profileError } = await supabaseAdmin
     .from('profiles')
-    .update({ full_name: fullName, avatar_url: avatarUrl, role: role })
+    .update({ full_name: fullName, avatar_url: avatarUrl, role: role, job: job })
     .eq('id', authData.user.id)
 
   if (profileError) {

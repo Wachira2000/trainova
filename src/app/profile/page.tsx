@@ -16,12 +16,15 @@ interface Profile {
   address?: string;
   city?: string;
   country?: string;
+  job?: string;
+  role?: string;
 }
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -37,6 +40,9 @@ export default function ProfilePage() {
         
         if (profileData) {
           setProfile({ ...profileData, email: user.email });
+          if (profileData.role === 'admin') {
+            setIsAdmin(true);
+          }
         }
       }
       setLoading(false);
@@ -65,7 +71,7 @@ export default function ProfilePage() {
         <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
         
         <div className="grid grid-cols-1 gap-8">
-          <UserProfileForm user={user} profile={profile} onUpdate={handleProfileUpdate} />
+          <UserProfileForm user={user} profile={profile} onUpdate={handleProfileUpdate} isAdmin={isAdmin} />
           <div className="bg-gray-900 border border-zinc-800 rounded-2xl p-8">
             <h3 className="text-xl font-bold mb-4">Update Password</h3>
             <UpdatePasswordForm user={user} />
