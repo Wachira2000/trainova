@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import UpdatePasswordForm from '../components/UpdatePasswordForm';
 import UserProfileForm from '../components/UserProfileForm';
@@ -21,6 +21,7 @@ interface Profile {
 }
 
 export default function ProfilePage() {
+  const supabase = createSupabaseBrowserClient();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);

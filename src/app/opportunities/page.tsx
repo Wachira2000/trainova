@@ -18,7 +18,7 @@ import {
   FaArrowRight,
   FaArrowDown,
 } from 'react-icons/fa';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 
 interface Job {
   id: string;
@@ -425,6 +425,7 @@ const SuccessMessageComponent = () => {
 };
 
 const OpportunitiesPage = () => {
+  const supabase = createSupabaseBrowserClient();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);

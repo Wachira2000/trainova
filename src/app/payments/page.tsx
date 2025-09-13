@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import PaymentDetailsForm from '../components/PaymentDetailsForm';
 
@@ -13,6 +13,7 @@ interface Profile {
 }
 
 export default function PaymentsPage() {
+  const supabase = createSupabaseBrowserClient();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);

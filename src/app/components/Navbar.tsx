@@ -2,10 +2,10 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiPlus, FiCreditCard, FiUploadCloud, FiBriefcase, FiDollarSign } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiUser, FiLogOut, FiPlus, FiCreditCard, FiBriefcase, FiDollarSign } from 'react-icons/fi';
 import { useState, useEffect, memo, useRef } from 'react';
 import { FaLightbulb } from 'react-icons/fa';
-import { supabase } from '@/lib/supabaseClient';
+import { useSupabase } from './SessionProvider';
 import { User } from '@supabase/supabase-js';
 
 // Define the Profile type
@@ -18,53 +18,9 @@ interface Profile {
 }
 
 const Navbar = () => {
+  const { user, profile } = useSupabase();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      const user = session?.user ?? null;
-      setUser(user);
-      if (user) {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-        setProfile(profileData);
-      } else {
-        setProfile(null);
-      }
-      setLoading(false);
-    });
-
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'profile_updated' && event.newValue === 'true') {
-        const fetchProfile = async () => {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            const { data: profileData } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single();
-            setProfile(profileData);
-          }
-        };
-        fetchProfile();
-        localStorage.removeItem('profile_updated');
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      authListener.subscription.unsubscribe();
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
   const MotionLink = motion(Link);
   const MotionAnchor = motion.a;
 
@@ -159,9 +115,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {loading ? (
-            <div className="flex-grow flex justify-end" />
-          ) : user ? (
+          {user ? (
             renderAuthenticatedNavbar()
           ) : (
             renderPublicNavbar()
@@ -220,6 +174,7 @@ const Navbar = () => {
 };
 
 const ProfileDropdown = ({ user, profile }: { user: User; profile: Profile }) => {
+  const { supabase } = useSupabase();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 

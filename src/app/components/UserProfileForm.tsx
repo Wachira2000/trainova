@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { FiUpload, FiEdit, FiSave, FiX } from 'react-icons/fi';
 
@@ -17,6 +17,7 @@ interface Profile {
 }
 
 export default function UserProfileForm({ user, profile: initialProfile, onUpdate, isAdmin }: { user: User; profile: Profile; onUpdate: (newProfile: Partial<Profile>) => void; isAdmin: boolean }) {
+  const supabase = createSupabaseBrowserClient();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(initialProfile);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);

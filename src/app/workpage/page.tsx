@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { FiDollarSign, FiX, FiBriefcase } from 'react-icons/fi';
-import { supabase } from '@/lib/supabaseClient';
-import { User } from '@supabase/supabase-js';
+import { useSupabase } from '../components/SessionProvider';
 import WorkpageLayout from '../components/WorkpageLayout';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -17,92 +16,55 @@ interface UserMetrics {
 }
 
 export default function Workpage() {
-  const [userMetrics, setUserMetrics] = useState<UserMetrics>({
-    total_earned: 0,
-    pending_withdrawal: 0,
-    completed_tasks: 0,
-    pending_tasks: 0,
-    approved_tasks: 0,
-    available_tasks: 0,
-  });
-  const [job, setJob] = useState('');
+  const { supabase, user, profile } = useSupabase();
+  const [userMetrics, setUserMetrics] = useState<UserMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [withdrawMessage, setWithdrawMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
-
-  useEffect(() => {
     if (user) {
-      fetchUserData();
+      setLoading(true);
+      const fetchInitialData = async () => {
+        const { data: metricsData, error: metricsError } = await supabase
+          .from('user_metrics')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (metricsError && metricsError.code !== 'PGRST116') {
+          setError(metricsError.message);
+        } else if (metricsData) {
+          setUserMetrics(metricsData);
+        }
+        setLoading(false);
+      };
+
+      fetchInitialData();
+
+      const channel = supabase
+        .channel('user_metrics_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_metrics',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            setUserMetrics(payload.new as UserMetrics);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
-  }, [user]);
-
-  useEffect(() => {
-    const handleFocus = () => {
-      if (user) {
-        fetchUserData();
-      }
-    };
-
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [user]); // Re-add listener if user changes
-
-  const fetchUserData = async () => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null); // Clear previous errors
-
-    try {
-      // Fetch metrics and profile in parallel
-      const [metricsResponse, profileResponse] = await Promise.all([
-        supabase.from('user_metrics').select('*').eq('user_id', user.id).single(),
-        supabase.from('profiles').select('job').eq('id', user.id).single(),
-      ]);
-
-      const { data: metricsData, error: metricsError } = metricsResponse;
-      if (metricsError && metricsError.code !== 'PGRST116') {
-        throw new Error(metricsError.message);
-      } else if (metricsData) {
-        setUserMetrics({
-          total_earned: metricsData.total_earned || 0,
-          pending_withdrawal: metricsData.pending_withdrawal || 0,
-          completed_tasks: metricsData.completed_tasks || 0,
-          pending_tasks: metricsData.pending_tasks || 0,
-          approved_tasks: metricsData.approved_tasks || 0,
-          available_tasks: metricsData.available_tasks || 0,
-        });
-      }
-
-      const { data: profileData, error: profileError } = profileResponse;
-      if (profileError) {
-        // It's okay if a profile error occurs, we can still show metrics
-        console.warn('Could not fetch user job:', profileError.message);
-      } else if (profileData) {
-        setJob(profileData.job || 'Not Assigned');
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, supabase]);
 
   const handleWithdraw = async () => {
     const amount = parseFloat(withdrawAmount);
@@ -110,7 +72,7 @@ export default function Workpage() {
       setWithdrawMessage({ type: 'error', text: 'Please enter a valid amount.' });
       return;
     }
-    if (amount > userMetrics.total_earned) {
+    if (userMetrics && amount > userMetrics.total_earned) {
       setWithdrawMessage({ type: 'error', text: 'Withdrawal amount cannot exceed total earned.' });
       return;
     }
@@ -124,7 +86,6 @@ export default function Workpage() {
 
       setWithdrawMessage({ type: 'success', text: 'Withdrawal request submitted successfully.' });
       setShowWithdrawModal(false);
-      fetchUserData(); // Refresh metrics
     } catch (error: any) {
       setWithdrawMessage({ type: 'error', text: error.message || 'An error occurred.' });
     } finally {
@@ -162,32 +123,32 @@ export default function Workpage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-cyan-400 flex items-center gap-2"><FiBriefcase /> Your Role</h3>
-            <p className="text-4xl font-bold mt-2">{job}</p>
+            <p className="text-4xl font-bold mt-2">{profile?.job || 'Not Assigned'}</p>
           </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-green-400">Total Earned</h3>
-            <p className="text-4xl font-bold mt-2">${userMetrics.total_earned.toFixed(2)}</p>
+            <p className="text-4xl font-bold mt-2">${userMetrics?.total_earned.toFixed(2) || '0.00'}</p>
           </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800">
             <h3 className="text-lg font-semibold text-zinc-400">Pending Withdrawals</h3>
-            <p className="text-4xl font-bold mt-2">${userMetrics.pending_withdrawal.toFixed(2)}</p>
+            <p className="text-4xl font-bold mt-2">${userMetrics?.pending_withdrawal.toFixed(2) || '0.00'}</p>
           </div>
           <div className="bg-gray-900 p-6 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold text-zinc-400">Completed</h4>
-              <p className="text-2xl font-bold">{userMetrics.completed_tasks}</p>
+              <p className="text-2xl font-bold">{userMetrics?.completed_tasks || 0}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Pending</h4>
-              <p className="text-2xl font-bold">{userMetrics.pending_tasks}</p>
+              <p className="text-2xl font-bold">{userMetrics?.pending_tasks || 0}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Approved</h4>
-              <p className="text-2xl font-bold">{userMetrics.approved_tasks}</p>
+              <p className="text-2xl font-bold">{userMetrics?.approved_tasks || 0}</p>
             </div>
             <div>
               <h4 className="font-semibold text-zinc-400">Available</h4>
-              <p className="text-2xl font-bold">{userMetrics.available_tasks}</p>
+              <p className="text-2xl font-bold">{userMetrics?.available_tasks || 0}</p>
             </div>
           </div>
         </div>
@@ -224,7 +185,7 @@ export default function Workpage() {
                 />
               </div>
               <p className="text-sm text-zinc-500 mt-2">
-                Available to withdraw: ${userMetrics.total_earned.toFixed(2)}
+                Available to withdraw: ${userMetrics?.total_earned.toFixed(2) || '0.00'}
               </p>
             </div>
             <button

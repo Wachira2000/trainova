@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 
 interface Profile {
@@ -12,6 +12,7 @@ interface Profile {
 }
 
 export default function PaymentDetailsForm({ user, profile, onUpdate }: { user: User; profile: Profile; onUpdate: (newProfile: Profile) => void }) {
+  const supabase = createSupabaseBrowserClient();
   const [banks, setBanks] = useState<any[]>([]);
   const [selectedBank, setSelectedBank] = useState(profile.bank_code || '');
   const [accountNumber, setAccountNumber] = useState(profile.account_number || '');

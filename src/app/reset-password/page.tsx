@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const PasswordInput = ({ name, id, value, onChange, required = false }: { name: string, id: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, required?: boolean }) => {
@@ -30,6 +30,7 @@ const PasswordInput = ({ name, id, value, onChange, required = false }: { name: 
 };
 
 export default function ResetPasswordPage() {
+  const supabase = createSupabaseBrowserClient();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');

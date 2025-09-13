@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { FiCheck, FiX, FiLoader } from 'react-icons/fi';
 
 interface WithdrawalRequest {
@@ -17,6 +17,7 @@ interface WithdrawalRequest {
 }
 
 export default function AdminWithdrawalsPage() {
+  const supabase = createSupabaseBrowserClient();
   const [requests, setRequests] = useState<WithdrawalRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

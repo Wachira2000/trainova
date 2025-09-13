@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+import { createSupabaseBrowserClient } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
@@ -31,6 +31,7 @@ const PasswordInput = ({ name, id, value, onChange, required = false }: { name: 
 };
 
 export default function UpdatePasswordForm({ user }: { user: User }) {
+  const supabase = createSupabaseBrowserClient();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
